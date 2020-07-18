@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--spring默认logback日志，这里配置具体输出格式-->
+<configuration >
+    <!--1. 配置日志输出路径:第一个/ 表示当前项目所在盘符-->
+    <property name="PATH" value="/log/cevent/yameng/webcourse/gateway" />
+    <!--1. 日志输出格式
+     |- 日志级别：%-5level
+     |- 高亮显示：%highlight
+     |- 日志颜色配置：%blue
+     |- 日志输出字符：%-50logger{50} 输出50个字符
+     |- logger表示类的全路径：如在main app中配置，则输出com.cevent.yameng.webcourse.EurekaApplication.class
+     |- 日志信息：%msg
+     |- 日志换行：%n
+     -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--打印完整的年月日-输出日志-->
+<!--            <Pattern>-->
+<!--               %d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %blue(%-50logger{50}:%-4line) %msg%n -->
+<!--            </Pattern>-->
+            <Pattern>
+                %d{ss.SSS} %highlight(%-5level) %blue(%-30logger{30}:%-4line) %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!--2.trace级别日志，输出到文件 -->
+    <appender name="TRACE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>
+                ${PATH}/trace.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <!--trace格式-->
+        <layout>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-50logger{50}:%-4line %green(%-8X{UUID}) %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <!--1.error级别 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${PATH}/error.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--触发器代理-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-50logger{50}:%-4line %green(%-8X{UUID}) %msg%n
+            </pattern>
+        </layout>
+        <!--1.使用拦截器，
+        |- logback需要注释onMisMatch，log4j2则需要解除注释
+         |- onMatch：配置符合过滤条件的操作
+         |- onMismatch：配置不符合过滤条件的操作
+         -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--1.按照日志级别分别输出 -->
+    <root level="ERROR">
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+    <root level="TRACE">
+        <appender-ref ref="TRACE_FILE"/>
+    </root>
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

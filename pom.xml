@@ -6,6 +6,7 @@
     <modules>
         <module>eureka</module>
         <module>system</module>
+        <module>gateway</module>
     </modules>
     <!--1. parent：说明父模块为springboot项目-->
     <parent>
