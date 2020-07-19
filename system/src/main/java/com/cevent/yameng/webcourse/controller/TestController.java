@@ -2,8 +2,13 @@ package com.cevent.yameng.webcourse.controller;/**
  * Created by Cevent on 2020/7/18.
  */
 
+import com.cevent.yameng.webcourse.domain.CeventYamengWebcourse;
+import com.cevent.yameng.webcourse.service.CeventYamengWebcourseService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author cevent
@@ -13,10 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class TestController {
+
     //system controller 测试
     //在system下加入请求路径system，之后的所有请求都必须加入system/路径
     @RequestMapping("/test")
     public String testSystem(){
         return "eureka module -system 启动成功!";
+    }
+
+    @Resource
+    private CeventYamengWebcourseService webcourseService;
+    //查询列表
+    @RequestMapping("/testlist")
+    public List<CeventYamengWebcourse> testList(){
+        return webcourseService.test_list();
     }
 }
