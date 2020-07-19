@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="Mysql" targetRuntime="MyBatis3" defaultModelType="flat">
+<!--        <property name="autoDelimitKeywords" value="true"/>-->
+        <!--定义表名和列名增加`别名避错-->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!--1.解决每次启动自动mapper生成，追尾添加xml-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+        <!--2.生成的实体类添加toString()-->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <!--3.不生成注释-->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!--4.jdbc连接-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/cevent_yameng_webcourse"
+                        userId="cevent_ym"
+                        password="cevent">
+
+        </jdbcConnection>
+
+        <!--5.domain配置-->
+        <javaModelGenerator
+                targetPackage="com.cevent.yameng.webcourse.server.domain"
+                targetProject="src\main\java">
+        </javaModelGenerator>
+        <!--6.mapper xml配置-->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src\main\resources">
+
+        </sqlMapGenerator>
+        <!--7.mapper class配置
+        SQL有3种生成方式
+        ANNO TATED MAPPER：生成的SQL全部在java中
+        MIXED MAPPER / XML MAPPER:生成的SQL全部在xml中
+        推荐使用xml，将java代码与sql解耦
+        -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.cevent.yameng.webcourse.server.mapper"
+                             targetProject="src\main\java">
+
+        </javaClientGenerator>
+        <!--domainObjectName对应domain的实体类名-->
+        <table tableName="test_webcourse" domainObjectName="CeventYamengWebcourse" />
+    </context>
+</generatorConfiguration>

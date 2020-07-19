@@ -1,16 +1,30 @@
-package com.cevent.yameng.webcourse.server.mapper;/**
- * Created by Cevent on 2020/7/19.
- */
+package com.cevent.yameng.webcourse.server.mapper;
 
 import com.cevent.yameng.webcourse.server.domain.CeventYamengWebcourse;
-
+import com.cevent.yameng.webcourse.server.domain.CeventYamengWebcourseExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-/**
- * @author cevent
- * @description mapper test 接口
- * @date 2020/7/19 13:49
- */
 public interface CeventYamengWebcourseMapper {
-    public List<CeventYamengWebcourse> test_list();
+    long countByExample(CeventYamengWebcourseExample example);
+
+    int deleteByExample(CeventYamengWebcourseExample example);
+
+    int deleteByPrimaryKey(String id);
+
+    int insert(CeventYamengWebcourse record);
+
+    int insertSelective(CeventYamengWebcourse record);
+
+    List<CeventYamengWebcourse> selectByExample(CeventYamengWebcourseExample example);
+
+    CeventYamengWebcourse selectByPrimaryKey(String id);
+
+    int updateByExampleSelective(@Param("record") CeventYamengWebcourse record, @Param("example") CeventYamengWebcourseExample example);
+
+    int updateByExample(@Param("record") CeventYamengWebcourse record, @Param("example") CeventYamengWebcourseExample example);
+
+    int updateByPrimaryKeySelective(CeventYamengWebcourse record);
+
+    int updateByPrimaryKey(CeventYamengWebcourse record);
 }

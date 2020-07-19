@@ -33,4 +33,16 @@ public class TestController {
     public List<CeventYamengWebcourse> testList(){
         return webcourseService.test_list();
     }
+
+    //查询列表
+    @RequestMapping("/examplelist")
+    public List<CeventYamengWebcourse> exampleList(){
+        return webcourseService.order_list();
+    }
+
+    //根据id查询
+    @RequestMapping("/getByid")
+    public List<CeventYamengWebcourse> getByid(){
+        return webcourseService.getByid();
+    }
 }
