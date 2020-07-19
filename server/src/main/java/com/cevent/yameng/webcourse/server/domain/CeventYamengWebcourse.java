@@ -1,4 +1,4 @@
-package com.cevent.yameng.webcourse.domain;/**
+package com.cevent.yameng.webcourse.server.domain;/**
  * Created by Cevent on 2020/7/19.
  */
 

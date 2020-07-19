@@ -2,8 +2,8 @@ package com.cevent.yameng.webcourse.controller;/**
  * Created by Cevent on 2020/7/18.
  */
 
-import com.cevent.yameng.webcourse.domain.CeventYamengWebcourse;
-import com.cevent.yameng.webcourse.service.CeventYamengWebcourseService;
+import com.cevent.yameng.webcourse.server.domain.CeventYamengWebcourse;
+import com.cevent.yameng.webcourse.server.service.CeventYamengWebcourseService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

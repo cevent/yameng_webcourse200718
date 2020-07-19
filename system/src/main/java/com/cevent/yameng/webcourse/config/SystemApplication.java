@@ -1,4 +1,4 @@
-package com.cevent.yameng.webcourse;/**
+package com.cevent.yameng.webcourse.config;/**
  * Created by Cevent on 2020/7/18.
  */
 
@@ -25,7 +25,7 @@ import org.springframework.core.env.Environment;
  */
 @SpringBootApplication
 @EnableEurekaClient
-@MapperScan("com.cevent.yameng.webcourse.mapper")
+@MapperScan("com.cevent.yameng.webcourse.server.mapper")
 @ComponentScan("com.cevent.yameng")
 public class SystemApplication {
     //新建日志

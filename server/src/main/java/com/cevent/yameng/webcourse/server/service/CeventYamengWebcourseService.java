@@ -1,9 +1,9 @@
-package com.cevent.yameng.webcourse.service;/**
+package com.cevent.yameng.webcourse.server.service;/**
  * Created by Cevent on 2020/7/19.
  */
 
-import com.cevent.yameng.webcourse.domain.CeventYamengWebcourse;
-import com.cevent.yameng.webcourse.mapper.CeventYamengWebcourseMapper;
+import com.cevent.yameng.webcourse.server.domain.CeventYamengWebcourse;
+import com.cevent.yameng.webcourse.server.mapper.CeventYamengWebcourseMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

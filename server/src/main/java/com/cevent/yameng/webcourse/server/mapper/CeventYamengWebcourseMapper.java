@@ -1,8 +1,8 @@
-package com.cevent.yameng.webcourse.mapper;/**
+package com.cevent.yameng.webcourse.server.mapper;/**
  * Created by Cevent on 2020/7/19.
  */
 
-import com.cevent.yameng.webcourse.domain.CeventYamengWebcourse;
+import com.cevent.yameng.webcourse.server.domain.CeventYamengWebcourse;
 
 import java.util.List;
 

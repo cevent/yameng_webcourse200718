@@ -7,6 +7,7 @@
         <module>eureka</module>
         <module>system</module>
         <module>gateway</module>
+        <module>server</module>
     </modules>
     <!--1. parent：说明父模块为springboot项目-->
     <parent>
@@ -64,6 +65,12 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>5.1.37</version>
+            </dependency>
+            <!--引入server模组-->
+            <dependency>
+                <groupId>com.cevent</groupId>
+                <artifactId>server</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
