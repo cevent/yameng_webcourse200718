@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cevent.yameng.webcourse.mapper.CeventYamengWebcourseMapper">
+    <!--mapper内的sql不可以以分号;结尾-->
     <select id="test_list" resultType="com.cevent.yameng.webcourse.domain.CeventYamengWebcourse">
         SELECT `id`,`name` FROM `test_webcourse`
     </select>
