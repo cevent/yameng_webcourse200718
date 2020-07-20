@@ -113,9 +113,13 @@
 
 <script>
 
-    $('body').attr('class','login-layout blur-login');
+    //mounted:页面每加载一次执行一次。解决组件初始化样式问题
     export default {
         name:"login",
+        mounted:function () {
+            $("body").attr("class","login-layout blur-login");
+            console.log("login");
+        },
         //指定@click=""点击事件，路由跳转的地址
         methods:{
             login(){

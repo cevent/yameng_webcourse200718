@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/login.vue'
 import Admin from './views/admin.vue'
+import Welcome from './views/admin/welcome'
 
 Vue.use(Router);
 //修改是，严谨格式化，对已有的代码，不要格式化
@@ -23,6 +24,10 @@ export default new Router({
     },{
         //配置admin路由
         path: "/admin",
-        component: Admin
+        component: Admin,
+        children:[{
+            path: "welcome",
+            component: Welcome
+        }]
     }]
 })

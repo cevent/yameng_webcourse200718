@@ -8,6 +8,7 @@
         <module>system</module>
         <module>gateway</module>
         <module>server</module>
+        <module>business</module>
     </modules>
     <!--1. parent：说明父模块为springboot项目-->
     <parent>
