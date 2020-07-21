@@ -13,11 +13,11 @@ import java.util.List;
 
 /**
  * @author cevent
- * @description
+ * @description 添加admin/web区分的路径接口隔离，便于做权限拦截
  * @date 2020/7/20 22:38
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/chapter")
 public class ChapterController {
 
     @Resource
