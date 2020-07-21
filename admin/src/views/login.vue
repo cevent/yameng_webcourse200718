@@ -123,7 +123,7 @@
         //指定@click=""点击事件，路由跳转的地址
         methods:{
             login(){
-                this.$router.push("/admin")
+                this.$router.push("/welcome")
             }
     }
     }

@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from './views/login.vue'
-import Admin from './views/admin.vue'
+import Login from './views/login'
+import Admin from './views/admin'
 import Welcome from './views/admin/welcome'
+import Chapter from "./views/admin/chapter";
 
 Vue.use(Router);
 //修改是，严谨格式化，对已有的代码，不要格式化
@@ -23,11 +24,18 @@ export default new Router({
         component: Login
     },{
         //配置admin路由
-        path: "/admin",
+        path: "/",
+        name: "admin",
         component: Admin,
         children:[{
             path: "welcome",
+            name: "welcome",
             component: Welcome
+        },{
+            //配置章节路由chapter
+            path: "business/chapter",
+            name: "business/chapter",
+            component: Chapter
         }]
     }]
 })

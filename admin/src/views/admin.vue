@@ -359,17 +359,21 @@
                 </div><!-- /.sidebar-shortcuts -->
 
                 <ul class="nav nav-list">
-                    <li class="">
-                        <a href="index.html">
+                    <!--增加sidebar - id -->
+                    <li class="" id="welcome-sidebar">
+                        <!--添加点击跳转：
+                        <router-link to="" > = <a href="">
+                        -->
+                        <router-link to="/welcome">
                             <i class="menu-icon fa fa-tachometer"></i>
                             <span class="menu-text"> 欢迎进入系统 </span>
-                        </a>
+                        </router-link>
 
                         <b class="arrow"></b>
                     </li>
 
                     <!--启动展开的样式-->
-                    <li class="avtive open">
+                    <li class="">
                         <a href="#" class="dropdown-toggle">
                             <i class="menu-icon fa fa-list"></i>
                             <span class="menu-text"> 系统管理 </span>
@@ -397,6 +401,31 @@
 
                                 <b class="arrow"></b>
                             </li>
+                        </ul>
+                    </li>
+
+                    <!--启动展开的样式-->
+                    <li class="avtive open">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text"> 业务管理 </span>
+
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <b class="arrow"></b>
+
+                        <ul class="submenu">
+                            <!--id与路由匹配：路由=business/chapter-->
+                            <li class="active" id="business-chapter-sidebar">
+                                <router-link to="/business/chapter">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    章节管理
+                                </router-link>
+
+                                <b class="arrow"></b>
+                            </li>
+
                         </ul>
                     </li>
 
@@ -463,10 +492,51 @@
     export default {
         name:"admin",
         mounted:function () {
+            //将this变为本地变量_this，js中有this关键字，代表当前执行方法的对象。
+            let _this=this;
             //移除之前login携带的class参数
             $("body").removeClass("login-layout blur-login");
             $("body").attr("class","no-skin");
             console.log("admin");
+            _this.activeSidebar(_this.$route.name.replace("/","-")+"-sidebar");
+        },
+        //监控明页面跳转：只对admin下的子路由监听，login/其他页面的跳转不会被监听到
+        watch:{
+            $route:{
+                handler:function (newVal,oldVal) {
+                    console.log("页面跳转：newVal==> "+newVal+"  oldVal===> "+oldVal);
+                    let _this=this;
+                    //页面加载完成后执行
+                    _this.$nextTick(function () {
+                        //将路径拼接为class,通过router-path定义的name属性，获取id，规则：id=路由
+                        _this.activeSidebar(_this.$route.name.replace("/","-")+"-sidebar");
+                    })
+                }
+            }
+        },
+        methods:{
+            login(){
+                this.$router.push("/admin")
+            },
+            /**
+             * 菜单激活样式：id是当前点击的菜单id
+             * siblings：jQuery用法，获取兄弟节点
+             */
+            //二级菜单
+            activeSidebar:function (id) {
+                //兄弟菜单去掉active样式，自身增加active样式
+                $("#"+id).siblings().removeClass("active");
+                $("#"+id).siblings().find("li").removeClass("active");
+                $("#"+id).addClass("active");
+
+                //一级菜单：如果有父菜单，父菜单的兄弟菜单去掉 open active，父菜单增加open active
+                let parentLi=$("#"+id).parents("li");
+                if(parentLi){
+                    parentLi.siblings().removeClass("open active");
+                    parentLi.addClass("open active")
+                }
+            }
+
         }
     }
 

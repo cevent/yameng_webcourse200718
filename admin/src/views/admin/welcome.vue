@@ -6,7 +6,14 @@
 
 <script>
     export default {
-        name: "welcome"
+        name: "welcome",
+        mounted:function() {
+            //设置了admin的跳转及子路由跳转，这里可取消
+            //this.$parent.activeSidebar("welcome-sidebar");
+        },
+        methods:{
+
+        }
     }
 </script>
 
