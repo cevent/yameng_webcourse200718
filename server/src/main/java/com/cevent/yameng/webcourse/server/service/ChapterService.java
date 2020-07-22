@@ -5,7 +5,10 @@ package com.cevent.yameng.webcourse.server.service;/**
 import com.cevent.yameng.webcourse.server.domain.Chapter;
 import com.cevent.yameng.webcourse.server.domain.ChapterExample;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
+import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.mapper.ChapterMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,14 +36,27 @@ public class ChapterService {
     }
 
     //使用dto：先创建dto获取的对象
-    public  List<ChapterDto> getChaptersDtoObj(){
+    public void getChaptersDtoObj(PageDto pageDto){
+        //引入github-pagehelper：pageNum（第几页,index=1）pageSize（每页条数）
+        //pageHelper会查程序如下执行的第一条语句，即chapterMapper.selectByExample(chapterExample)
+        //PageHelper.startPage(2,2);
+
+        //A-->引入PageDto
+        PageHelper.startPage(pageDto.getCurrentPage(),pageDto.getInitPageNum());
+
         ChapterExample chapterExample=new ChapterExample();
 //        //criteria创建条件
 //        chapterExample.createCriteria().andIdEqualTo("4");
 //        //clause排序拼接子句
 //        chapterExample.setOrderByClause("id desc");
-        //查询醋结果集
+
+        //查询醋结果集，page执行语句
         List<Chapter> chaptersObj=chapterMapper.selectByExample(chapterExample);
+
+        //B-->引用pageInfo<泛型>
+        PageInfo<Chapter> pageInfo=new PageInfo<>(chaptersObj);
+        pageDto.setSumPage(pageInfo.getTotal());
+
         //循环遍历结果集:原生for循环：fori
         List<ChapterDto> chapterDtos=new ArrayList<ChapterDto>();
         for (int i = 0;i < chaptersObj.size(); i++) {
@@ -50,6 +66,6 @@ public class ChapterService {
             BeanUtils.copyProperties(chapter,chapterDto);
             chapterDtos.add(chapterDto);
         }
-        return chapterDtos;
+        pageDto.setList(chapterDtos);
     }
 }

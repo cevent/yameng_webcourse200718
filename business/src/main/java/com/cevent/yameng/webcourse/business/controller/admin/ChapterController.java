@@ -4,7 +4,11 @@ package com.cevent.yameng.webcourse.business.controller.admin;/**
 
 import com.cevent.yameng.webcourse.server.domain.Chapter;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
+import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.service.ChapterService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +24,9 @@ import java.util.List;
 @RequestMapping("/admin/chapter")
 public class ChapterController {
 
+    //调取日志
+    private static final Logger LOG= LoggerFactory.getLogger(ChapterController.class);
+
     @Resource
     private ChapterService chapterService;
 
@@ -28,9 +35,14 @@ public class ChapterController {
         return chapterService.getChapters();
     }
 
-    //获取dto实体类属性
+    //获取dto实体类属性，调用分页
+    //public PageDto getChapterDto(PageDto pageDto){ //接收表单的方式
     @RequestMapping("/chapterDto")
-    public List<ChapterDto> getChapterDto(){
-        return chapterService.getChaptersDtoObj();
+    public PageDto getChapterDto(@RequestBody PageDto pageDto){ //需求：接收流的方式，并且修改前端vue-data接收pageDto对象，因为被修改加入了page信息
+        //获取日志信息输出：("输出：id={} , name={}",id,name) 并非("输出：id="+id"+""...)
+        LOG.info("输出pageDto对象: {}",pageDto);
+
+        chapterService.getChaptersDtoObj(pageDto);
+        return pageDto;
     }
 }
