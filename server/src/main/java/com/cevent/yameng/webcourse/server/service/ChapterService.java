@@ -7,9 +7,11 @@ import com.cevent.yameng.webcourse.server.domain.ChapterExample;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.mapper.ChapterMapper;
+import com.cevent.yameng.webcourse.server.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import sun.text.resources.iw.FormatData_iw_IL;
@@ -67,5 +69,15 @@ public class ChapterService {
             chapterDtos.add(chapterDto);
         }
         pageDto.setList(chapterDtos);
+    }
+
+    //新增章节方法
+    public void addChapter(ChapterDto chapterDto){
+        //这里前端只传入name和courseid，需要uuid自动生成id
+        chapterDto.setId(UUIDUtil.getShortUUID());
+
+        Chapter chapter=new Chapter();
+        BeanUtils.copyProperties(chapterDto,chapter);
+        chapterMapper.insert(chapter);
     }
 }
