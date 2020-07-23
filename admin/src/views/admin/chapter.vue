@@ -36,21 +36,41 @@
                 <td>{{chapter.courseId}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-success">
-                            <i class="ace-icon fa fa-check bigger-120"></i>
-                        </button>
 
-                        <button class="btn btn-xs btn-info">
+                        <button class="btn btn-xs btn-info" v-on:click="editChapter(chapter)">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
 
-                        <button class="btn btn-xs btn-danger">
+                        <button class="btn btn-xs btn-danger" v-on:click="deleteChapter(chapter.id)">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                         </button>
 
-                        <button class="btn btn-xs btn-warning">
-                            <i class="ace-icon fa fa-flag bigger-120"></i>
-                        </button>
+                    </div>
+                    <!--hidden-md：中等屏幕隐藏编辑与删除按钮，变为设置，hidden-lg大屏幕可见-->
+                    <div class="hidden-md hidden-lg">
+                        <div class="inner pos-rel">
+                            <button class="btn btn-minier btn-primary dropdown-toggle"
+                                    data-toggle="dropdown" data-position="auto">
+                                1
+                                <i class="ace-icon fa fa-cog icon-only bigger-120"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                <li>
+                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="editChapter(chapter)">
+                                        <span class="blue">
+                                            <i class="ace-icon fa fa-pencil bigger-120" ></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="deleteChapter(chapter.id)">
+                                        <span class="blue">
+                                            <i class="ace-icon fa fa-trash bigger-120"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -151,6 +171,8 @@
             add(){
                 let _this=this;
                 console.log("为不引起eslint提醒，调用_list:"+_this);
+                //不将上次编辑的数据回显到新建中
+                _this.chapter={};
                 //显示模态框
                 $("#form-modal").modal("show");
             },
@@ -166,6 +188,25 @@
                             _this.list(1);
                         }
                     })
+            },
+            editChapter(chapter){
+                let _this=this;
+
+                //数据绑定，引入当前id，需要进行jQuery-extend的引用，{target},复制原数据，不影响页面对象
+                _this.chapter=$.extend({},chapter);
+                $("#form-modal").modal("show");
+            },
+            deleteChapter(id){
+                let _this=this;
+                //restFul分割请求，对应controller定义的mapping跳转类型
+                _this.$ajax.delete('http://127.0.0.1:8699/business/admin/chapter/delChapter/'+id)
+                .then((responseDel)=>{
+                    console.log("删除章节内容：",responseDel);
+                    let resp=responseDel.data;
+                    if(resp.success){
+                        _this.list(1);
+                    }
+                })
             }
         }
     }

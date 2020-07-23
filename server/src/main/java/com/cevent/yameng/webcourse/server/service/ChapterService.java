@@ -7,12 +7,14 @@ import com.cevent.yameng.webcourse.server.domain.ChapterExample;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.mapper.ChapterMapper;
+import com.cevent.yameng.webcourse.server.util.CopyUtil;
 import com.cevent.yameng.webcourse.server.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import sun.text.resources.iw.FormatData_iw_IL;
 
@@ -72,12 +74,32 @@ public class ChapterService {
     }
 
     //新增章节方法
-    public void addChapter(ChapterDto chapterDto){
+    private void addChapter(Chapter chapter){
         //这里前端只传入name和courseid，需要uuid自动生成id
-        chapterDto.setId(UUIDUtil.getShortUUID());
-
-        Chapter chapter=new Chapter();
-        BeanUtils.copyProperties(chapterDto,chapter);
+        chapter.setId(UUIDUtil.getShortUUID());
         chapterMapper.insert(chapter);
     }
+
+
+    //更新章节方法
+    private void updateChapter(Chapter chapter){
+        //更具主键更新
+        chapterMapper.updateByPrimaryKey(chapter);
+    }
+    //向外暴露只跑路Dto，不暴露原实体类(只供servie内部用)
+    //判断是否有值，完成新增/修改跳转
+    public void redirectAddOrUpdate(ChapterDto chapterDto){
+        Chapter chapter= CopyUtil.copy(chapterDto,Chapter.class);
+        if(StringUtils.isEmpty(chapterDto.getId())){
+            this.addChapter(chapter);
+        }else{
+            this.updateChapter(chapter);
+        }
+    }
+
+    //删除章节的方法
+    public void deleteChapter(String id){
+        chapterMapper.deleteByPrimaryKey(id);
+    }
+
 }
