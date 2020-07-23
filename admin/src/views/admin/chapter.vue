@@ -182,6 +182,15 @@
             },
             addPageChapter: function (page) {
                 let _this = this;
+
+                //校验
+                if(!Validator.require(_this.chapter.name,"名称")
+                    || !Validator.require(_this.chapter.courseId,"课程ID")
+                    || !Validator.length(_this.chapter.courseId,"课程ID",3,8)
+                ){
+                    return ;
+                }
+
                 Loading.show();
                 _this.$ajax.post('http://127.0.0.1:8699/business/admin/chapter/addChapter', _this.chapter)
                     .then((responseAdd) => {
@@ -194,6 +203,8 @@
                             _this.list(1);
                             //添加提示
                             Toast.success("保存成功！");
+                        }else{
+                            Toast.warning(resp.responseMsg);
                         }
                     })
             },
@@ -222,33 +233,6 @@
                             }
                         });
                 });
-
-                //引入sweetalert确认框
-                // Swal.fire({
-                //     title: '确认删除?',
-                //     text: "删除后不可恢复!",
-                //     icon: 'warning',
-                //     showCancelButton: true,
-                //     confirmButtonColor: '#3085d6',
-                //     cancelButtonColor: '#d33',
-                //     confirmButtonText: '确认!'
-                // }).then((result) => {
-                //     if (result.value) {
-                //         Loading.show();
-                //         //restFul分割请求，对应controller定义的mapping跳转类型
-                //         _this.$ajax.delete('http://127.0.0.1:8699/business/admin/chapter/delChapter/'+id)
-                //             .then((responseDel)=>{
-                //                 Loading.hide();
-                //                 console.log("删除章节内容：",responseDel);
-                //                 let resp=responseDel.data;
-                //                 if(resp.success){
-                //                     _this.list(1);
-                //                     Toast.success("删除成功！");
-                //                 }
-                //             });
-                //     }
-                // });
-
             },
         }
     }

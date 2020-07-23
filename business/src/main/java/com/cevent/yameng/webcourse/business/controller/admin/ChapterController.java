@@ -6,7 +6,9 @@ import com.cevent.yameng.webcourse.server.domain.Chapter;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.dto.ResponseDto;
+import com.cevent.yameng.webcourse.server.exception.ValidationException;
 import com.cevent.yameng.webcourse.server.service.ChapterService;
+import com.cevent.yameng.webcourse.server.util.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +26,13 @@ import java.util.List;
 public class ChapterController {
 
     //调取日志
-    private static final Logger LOG= LoggerFactory.getLogger(ChapterController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChapterController.class);
 
     @Resource
     private ChapterService chapterService;
 
     @RequestMapping("/chapter")
-    public List<Chapter> getCaptureList(){
+    public List<Chapter> getCaptureList() {
         return chapterService.getChapters();
     }
 
@@ -47,10 +49,10 @@ public class ChapterController {
 
     //引入ResponseDto,requestMapping既支持post，又支持get，需要定制为特定类型post
     @PostMapping("/chapterDto")
-    public ResponseDto getChapterDto(@RequestBody PageDto pageDto){ //需求：接收流的方式，并且修改前端vue-data接收pageDto对象，因为被修改加入了page信息
+    public ResponseDto getChapterDto(@RequestBody PageDto pageDto) { //需求：接收流的方式，并且修改前端vue-data接收pageDto对象，因为被修改加入了page信息
         //获取日志信息输出：("输出：id={} , name={}",id,name) 并非("输出：id="+id"+""...)
-        LOG.info("输出pageDto对象: {}",pageDto);
-        ResponseDto responseDto=new ResponseDto();
+        LOG.info("输出pageDto对象: {}", pageDto);
+        ResponseDto responseDto = new ResponseDto();
         chapterService.getChaptersDtoObj(pageDto);
         responseDto.setResponseData(pageDto);
         return responseDto;
@@ -67,9 +69,16 @@ public class ChapterController {
     //引入ResponseDto，所有请求都返回该类型
     //新增章节controller，调用server-service的addChapter
     @PostMapping("/addChapter")
-    public ResponseDto addChapterDto(@RequestBody ChapterDto chapterDto){
-        LOG.info("输出chapterDTO对象：{}",chapterDto);
-        ResponseDto responseDto=new ResponseDto();
+    public ResponseDto addChapterDto(@RequestBody ChapterDto chapterDto) {
+        LOG.info("输出chapterDTO对象：{}", chapterDto);
+
+        //添加校验
+        Validator.require(chapterDto.getName(), "章节名称");
+        Validator.require(chapterDto.getCourseId(), "课程ID");
+        Validator.length(chapterDto.getCourseId(), "课程ID", 3, 10);
+        //抛出异常到ControllerExceptionHandler，回传响应页面@ResponseBody
+
+        ResponseDto responseDto = new ResponseDto();
         chapterService.redirectAddOrUpdate(chapterDto);
         responseDto.setResponseData(chapterDto);
         return responseDto;
@@ -77,9 +86,9 @@ public class ChapterController {
 
     //删除章节
     @DeleteMapping("delChapter/{id}")
-    public ResponseDto deleteChapter(@PathVariable String id){
-        LOG.info("删除的--> id:{}",id);
-        ResponseDto responseDto=new ResponseDto();
+    public ResponseDto deleteChapter(@PathVariable String id) {
+        LOG.info("删除的--> id:{}", id);
+        ResponseDto responseDto = new ResponseDto();
         chapterService.deleteChapter(id);
         return responseDto;
     }
