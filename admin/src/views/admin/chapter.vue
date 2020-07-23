@@ -148,6 +148,9 @@
                 let _this = this;
                 //_this.$ajax.get('http://127.0.0.1:8699/business/admin/chapter/chapterDto?currentPage=1&initPageNum=5').then((responseDTO)=>{
 
+                //调用加载方法
+                Loading.show();
+
                 //切换post请求
                 _this.$ajax.post('http://127.0.0.1:8699/business/admin/chapter/chapterDto',
                     {
@@ -155,6 +158,7 @@
                         //$refs:根据别名，子组件获取子组件，size=获取下拉框数据
                         initPageNum: _this.$refs.pagination.size
                     }).then((responseDTO) => {
+                        Loading.hide();
                     console.log("查询章节列表：", responseDTO);
                     //获取数据传给data:chapters，加入分页失效，无法获取page信息
                     //_this.chapters=responseDTO.data.list(为html元素对象data返回值对象，接收@RequestBody流对象信息)
@@ -178,14 +182,18 @@
             },
             addPageChapter: function (page) {
                 let _this = this;
+                Loading.show();
                 _this.$ajax.post('http://127.0.0.1:8699/business/admin/chapter/addChapter', _this.chapter)
                     .then((responseAdd) => {
+                        Loading.hide();
                         console.log("保存章节结果：", responseAdd);
                         let resp = responseAdd.data;
                         if (resp.success) {
                             //backdrop:'static'禁止点击空白处关闭modal
                             $("#form-modal").modal('hide');
                             _this.list(1);
+                            //添加提示
+                            Toast.success("保存成功！");
                         }
                     })
             },
@@ -198,16 +206,50 @@
             },
             deleteChapter(id){
                 let _this=this;
-                //restFul分割请求，对应controller定义的mapping跳转类型
-                _this.$ajax.delete('http://127.0.0.1:8699/business/admin/chapter/delChapter/'+id)
-                .then((responseDel)=>{
-                    console.log("删除章节内容：",responseDel);
-                    let resp=responseDel.data;
-                    if(resp.success){
-                        _this.list(1);
-                    }
-                })
-            }
+
+                //引入confirm
+                Confirm.show("删除章节后不可恢复!",function () {
+                    Loading.show();
+                    //restFul分割请求，对应controller定义的mapping跳转类型
+                    _this.$ajax.delete('http://127.0.0.1:8699/business/admin/chapter/delChapter/'+id)
+                        .then((responseDel)=>{
+                            Loading.hide();
+                            console.log("删除章节内容：",responseDel);
+                            let resp=responseDel.data;
+                            if(resp.success){
+                                _this.list(1);
+                                Toast.success("删除成功！");
+                            }
+                        });
+                });
+
+                //引入sweetalert确认框
+                // Swal.fire({
+                //     title: '确认删除?',
+                //     text: "删除后不可恢复!",
+                //     icon: 'warning',
+                //     showCancelButton: true,
+                //     confirmButtonColor: '#3085d6',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: '确认!'
+                // }).then((result) => {
+                //     if (result.value) {
+                //         Loading.show();
+                //         //restFul分割请求，对应controller定义的mapping跳转类型
+                //         _this.$ajax.delete('http://127.0.0.1:8699/business/admin/chapter/delChapter/'+id)
+                //             .then((responseDel)=>{
+                //                 Loading.hide();
+                //                 console.log("删除章节内容：",responseDel);
+                //                 let resp=responseDel.data;
+                //                 if(resp.success){
+                //                     _this.list(1);
+                //                     Toast.success("删除成功！");
+                //                 }
+                //             });
+                //     }
+                // });
+
+            },
         }
     }
 </script>
