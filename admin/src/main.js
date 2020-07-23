@@ -9,6 +9,18 @@ import router from './router'
 Vue.config.productionTip = false
 //prototype为vue的全局变量，使用this.propxxx获取值，$代表全局属性的约定,将$ajax设置为内置属性=axios
 Vue.prototype.$ajax=axios;
+/**
+ * axios拦截器:打印日志
+ */
+axios.interceptors.request.use(function (config) {
+  console.log("请求：",config);
+  return config;
+},error => {});
+axios.interceptors.response.use(function (response) {
+  console.log("响应结果：",response);
+  return response;
+},error => {});
+
 new Vue({
   router,
   render: h => h(App),

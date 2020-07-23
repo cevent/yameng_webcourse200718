@@ -79,6 +79,18 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>1.2.10</version>
             </dependency>
+            <!--引入AspectJ-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>2.3.1.RELEASE</version>
+            </dependency>
+            <!--引入阿里图片转换fastjson-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.60</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -27,6 +27,8 @@ public class ChapterController {
 
     //调取日志
     private static final Logger LOG = LoggerFactory.getLogger(ChapterController.class);
+    //引用AOP日志，定义这里的业务信息=章节
+    private static final String BUSINESS_NAME="章节";
 
     @Resource
     private ChapterService chapterService;

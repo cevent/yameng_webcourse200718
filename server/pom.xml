@@ -43,6 +43,16 @@
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
+        <!--引入日志切面aop-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!--引入阿里图片转换fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
