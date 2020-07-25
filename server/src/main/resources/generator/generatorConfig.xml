@@ -47,8 +47,10 @@
 
         </javaClientGenerator>
         <!--domainObjectName对应domain的实体类名-->
-<!--        <table tableName="test_webcourse" domainObjectName="CeventYamengWebcourse" />-->
-            <!--生成新表，注释掉已经生成的表-->
-            <table tableName="chapter" domainObjectName="Chapter" />
+        <!-- <table tableName="test_webcourse" domainObjectName="CeventYamengWebcourse" />-->
+        <!--生成新表，注释掉已经生成的表-->
+        <!-- <table tableName="chapter" domainObjectName="Chapter" />-->
+        <!--生成小节表-->
+        <table tableName="section" domainObjectName="Section" />
     </context>
 </generatorConfiguration>

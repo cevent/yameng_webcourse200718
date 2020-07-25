@@ -25,3 +25,6 @@ new Vue({
   router,
   render: h => h(App),
 }).$mount('#app');
+
+//代码中使用环境变量
+console.log("环境：",process.env.NODE_ENV);

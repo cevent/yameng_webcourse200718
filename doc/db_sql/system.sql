@@ -39,3 +39,25 @@ insert into `chapter` (`id`,`course_id`,`name`) values ('0000013','111111','测�
 insert into `chapter` (`id`,`course_id`,`name`) values ('0000014','111111','测试大章14');
 insert into `chapter` (`id`,`course_id`,`name`) values ('0000015','111111','测试大章15');
 insert into `chapter` (`id`,`course_id`,`name`) values ('0000016','111111','测试大章16');
+
+#4.小节表
+DROP TABLE IF EXISTS `section`;
+CREATE TABLE `section`(
+                          `id` CHAR(8) NOT NULL DEFAULT '' COMMENT '小节ID',
+                          `title` VARCHAR(50) NOT NULL COMMENT '标题',
+                          `course_id` CHAR(8) COMMENT '课程|course ID',
+                          `chapter_id` CHAR(8) COMMENT '章节| chapter ID',
+                          `video_add` VARCHAR(200) COMMENT '视频地址',
+                          `time` INT COMMENT '时长-单位秒',
+                          `charge` CHAR(1) COMMENT '收费-C收费-F免费',
+                          `sort` INT COMMENT '顺序',
+                          `create_time` DATETIME(3) COMMENT '创建时间',
+                          `update_time` DATETIME(3) COMMENT '修改时间',
+                          PRIMARY KEY (`id`)
+)
+    ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT '小节';
+
+INSERT INTO `section` (id,title,course_id,chapter_id,video_add,time,charge,sort,create_time,update_time)
+VALUES('A0000101','测试小节01','00000101','00000001','',500,'F',1,NOW(),NOW());
+INSERT INTO `section` (id,title,course_id,chapter_id,video_add,time,charge,sort,create_time,update_time)
+VALUES('A0000102','测试小节02','00000102','00000002','',500,'F',1,NOW(),NOW());

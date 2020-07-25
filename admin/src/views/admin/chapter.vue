@@ -152,7 +152,7 @@
                 Loading.show();
 
                 //切换post请求
-                _this.$ajax.post('http://127.0.0.1:8699/business/admin/chapter/chapterDto',
+                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/chapterDto',
                     {
                         currentPage: page,
                         //$refs:根据别名，子组件获取子组件，size=获取下拉框数据
@@ -192,7 +192,7 @@
                 }
 
                 Loading.show();
-                _this.$ajax.post('http://127.0.0.1:8699/business/admin/chapter/addChapter', _this.chapter)
+                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/chapter/addChapter', _this.chapter)
                     .then((responseAdd) => {
                         Loading.hide();
                         console.log("保存章节结果：", responseAdd);
@@ -222,7 +222,7 @@
                 Confirm.show("删除章节后不可恢复!",function () {
                     Loading.show();
                     //restFul分割请求，对应controller定义的mapping跳转类型
-                    _this.$ajax.delete('http://127.0.0.1:8699/business/admin/chapter/delChapter/'+id)
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER+'/business/admin/chapter/delChapter/'+id)
                         .then((responseDel)=>{
                             Loading.hide();
                             console.log("删除章节内容：",responseDel);
