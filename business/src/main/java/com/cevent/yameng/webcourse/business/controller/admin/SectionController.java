@@ -34,7 +34,7 @@ public class SectionController {
     /**
      * 保存，id有值更新，id=null新增
      */
-    @PostMapping("/sava")
+    @PostMapping("/save")
     public ResponseDto save(@RequestBody SectionDto sectionDto) {
         LOG.info("输出sectionDTO对象：{}", sectionDto);
         //保存校验

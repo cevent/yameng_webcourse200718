@@ -34,7 +34,7 @@ public class ${Domain}Controller {
     /**
      * 保存，id有值更新，id=null新增
      */
-    @PostMapping("/sava")
+    @PostMapping("/save")
     public ResponseDto save(@RequestBody ${Domain}Dto ${domain}Dto) {
         LOG.info("输出${domain}DTO对象：{}", ${domain}Dto);
         //保存校验

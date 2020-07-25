@@ -15,9 +15,9 @@ public class FieldUtil {
     private String type; //字段类型:char(1)/varchar(1)
     private String javaType; //java类型
     private String comment; //注释 中文名nameCN | ID
-    private Boolean nullAble; //是否为空
-    private Integer length; //字符串长度
-    private Boolean Enums; //是否为枚举
+    private Boolean nullAble; //是否为空：校验
+    private Integer length; //字符串长度：校验
+    private Boolean Enums; //是否为枚举：校验
     private String enumsConst; //是否为枚举常量COURSE_LEVEL
 
     public String getName() {
