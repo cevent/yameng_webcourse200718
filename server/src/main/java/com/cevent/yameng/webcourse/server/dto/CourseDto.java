@@ -2,41 +2,54 @@ package com.cevent.yameng.webcourse.server.dto;
 /*
 * typeSet:整理出所有用到的java类型，生成import语句，一种类型只需要引入一次，所以去重
 */
+        import java.math.BigDecimal;
         import java.util.Date;
         import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class SectionDto{
+public class CourseDto{
     /**
     * 循环list
     */
         /**
-        * 小节ID
+        * 课程ID
         */
         private String id;
         /**
-        * 标题
+        * 课程名
         */
-        private String title;
+        private String name;
         /**
-        * 课程ID
+        * 课程概述
         */
-        private String courseId;
+        private String summary;
         /**
-        * 章节ID
-        */
-        private String chapterId;
-        /**
-        * 视频地址
-        */
-        private String videoAdd;
-        /**
-        * 时长-单位秒
+        * 时长 | 单位秒
         */
         private Integer time;
         /**
-        * 收费-C收费-F免费
+        * 价格（元）
+        */
+        private BigDecimal price;
+        /**
+        * 封面
+        */
+        private String image;
+        /**
+        * 级别|ONE("1","初级"),TWO("2","中级"),THREE("3","高级")
+        */
+        private String level;
+        /**
+        * 收费|CHARGE("C","收费"),FREE("F","免费")
         */
         private String charge;
+        /**
+        * 状态|PUBLISH("P","发布"),DRAFT("D","草稿")
+        */
+        private String status;
+        /**
+        * 报名数
+        */
+        private Integer enroll;
         /**
         * 顺序
         */
@@ -62,33 +75,19 @@ public class SectionDto{
         public void setId(String id){
             this.id=id;
         }
-        public String getTitle(){
-            return title;
+        public String getName(){
+            return name;
         }
 
-        public void setTitle(String title){
-            this.title=title;
+        public void setName(String name){
+            this.name=name;
         }
-        public String getCourseId(){
-            return courseId;
-        }
-
-        public void setCourseId(String courseId){
-            this.courseId=courseId;
-        }
-        public String getChapterId(){
-            return chapterId;
+        public String getSummary(){
+            return summary;
         }
 
-        public void setChapterId(String chapterId){
-            this.chapterId=chapterId;
-        }
-        public String getVideoAdd(){
-            return videoAdd;
-        }
-
-        public void setVideoAdd(String videoAdd){
-            this.videoAdd=videoAdd;
+        public void setSummary(String summary){
+            this.summary=summary;
         }
         public Integer getTime(){
             return time;
@@ -97,12 +96,47 @@ public class SectionDto{
         public void setTime(Integer time){
             this.time=time;
         }
+        public BigDecimal getPrice(){
+            return price;
+        }
+
+        public void setPrice(BigDecimal price){
+            this.price=price;
+        }
+        public String getImage(){
+            return image;
+        }
+
+        public void setImage(String image){
+            this.image=image;
+        }
+        public String getLevel(){
+            return level;
+        }
+
+        public void setLevel(String level){
+            this.level=level;
+        }
         public String getCharge(){
             return charge;
         }
 
         public void setCharge(String charge){
             this.charge=charge;
+        }
+        public String getStatus(){
+            return status;
+        }
+
+        public void setStatus(String status){
+            this.status=status;
+        }
+        public Integer getEnroll(){
+            return enroll;
+        }
+
+        public void setEnroll(Integer enroll){
+            this.enroll=enroll;
         }
         public Integer getSort(){
             return sort;
@@ -134,12 +168,15 @@ public class SectionDto{
         stringBuilder.append("Hash = ").append(hashCode());
 
             stringBuilder.append(", id=").append(id);
-            stringBuilder.append(", title=").append(title);
-            stringBuilder.append(", courseId=").append(courseId);
-            stringBuilder.append(", chapterId=").append(chapterId);
-            stringBuilder.append(", videoAdd=").append(videoAdd);
+            stringBuilder.append(", name=").append(name);
+            stringBuilder.append(", summary=").append(summary);
             stringBuilder.append(", time=").append(time);
+            stringBuilder.append(", price=").append(price);
+            stringBuilder.append(", image=").append(image);
+            stringBuilder.append(", level=").append(level);
             stringBuilder.append(", charge=").append(charge);
+            stringBuilder.append(", status=").append(status);
+            stringBuilder.append(", enroll=").append(enroll);
             stringBuilder.append(", sort=").append(sort);
             stringBuilder.append(", createTime=").append(createTime);
             stringBuilder.append(", updateTime=").append(updateTime);

@@ -15,6 +15,12 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
+<#list typeSet as type>
+    <#if type=='Date'>
+import java.util.Date;
+    </#if>
+</#list>
+
 @Service
 public class ${Domain}Service {
     @Resource
@@ -27,6 +33,13 @@ public class ${Domain}Service {
 
         PageHelper.startPage(pageDto.getCurrentPage(),pageDto.getInitPageNum());
         ${Domain}Example ${domain}Example=new ${Domain}Example();
+
+        <#list fieldUtilList as field>
+            <#if field.nameSmallHump=='sort'>
+        ${domain}Example.setOrderByClause("sort asc");
+            </#if>
+        </#list>
+
         List<${Domain}> ${domain}List=${domain}Mapper.selectByExample(${domain}Example);
 
         PageInfo<${Domain}> pageInfo=new PageInfo<>(${domain}List);
@@ -40,6 +53,20 @@ public class ${Domain}Service {
      * 新增
      */
     private void insert(${Domain} ${domain}){
+        <#list typeSet as type>
+            <#if type=="Date">
+        Date now=new Date();
+            </#if>
+        </#list>
+        <#list fieldUtilList as field>
+            <#if field.nameSmallHump=='createTime'>
+        ${domain}.setCreateTime(now);
+            </#if>
+            <#if field.nameSmallHump=='updateTime'>
+        ${domain}.setUpdateTime(now);
+            </#if>
+        </#list>
+
         ${domain}.setId(UUIDUtil.getShortUUID());
         ${domain}Mapper.insert(${domain});
     }
@@ -49,6 +76,11 @@ public class ${Domain}Service {
      * 更新
      */
     private void update(${Domain} ${domain}){
+    <#list fieldUtilList as field>
+        <#if field.nameSmallHump=='updateTime'>
+        ${domain}.setUpdateTime(new Date());
+        </#if>
+    </#list>
         ${domain}Mapper.updateByPrimaryKey(${domain});
     }
 

@@ -19,7 +19,6 @@ public class ${Domain}Dto{
     <#list fieldUtilList as field>
         /**
         * ${field.comment}
-        * @JsonFormat注解：后端日期类型格式化，再返回到前端
         */
         <#if field.javaType="Date">
             @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

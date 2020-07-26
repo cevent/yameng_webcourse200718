@@ -17,16 +17,24 @@
             <thead>
             <tr>
                 <#list fieldUtilList as field>
-                    <th>${field.nameCN}</th>
+                    <#if field.nameSmallHump!="createTime" && field.nameSmallHump!="updateTime">
+                        <th>${field.nameCN}</th>
+                    </#if>
                 </#list>
                 <th class="hidden-480">操作</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr v-for="${domain} in ${domain}s" :key="${domain}">
+            <tr v-for="${domain} in ${domain}s" :key="${domain}.index">
                 <#list fieldUtilList as field>
-                    <td>{{${domain}.${field.nameSmallHump}}}</td>
+                    <#if field.nameSmallHump!="createTime" && field.nameSmallHump!="updateTime">
+                        <#if field.Enums>
+                            <td>{{${field.enumsConst} | optionKV(${domain}.${field.nameSmallHump}) }}</td>
+                            <#else >
+                            <td>{{${domain}.${field.nameSmallHump}}}</td>
+                        </#if>
+                    </#if>
                 </#list>
 
                 <td>
@@ -79,17 +87,30 @@
                     <div class="modal-body">
                         <form class="form-horizontal">
                             <#list fieldUtilList as field>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">${field.nameCN}</label>
-                                    <div class="col-sm-10">
-                                        <input
-                                                v-model="${domain}.${field.nameSmallHump}"
-                                                type="text" class="form-control"
-                                                placeholder="${field.nameCN}" >
-                                    </div>
-                                </div>
-                            </#list>
+                                <#if field.name!="id" && field.nameSmallHump!="createTime" && field.nameSmallHump!="updateTime">
+                                    <#if field.Enums>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">${field.nameCN}</label>
+                                            <div class="col-sm-10">
+                                                <select v-model="${domain}.${field.nameSmallHump}" class="form-control">
+                                                    <option v-for="e in ${field.enumsConst}" :key="e.index" v-bind:value="e.key">{{e.value}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <#else >
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">${field.nameCN}</label>
+                                                <div class="col-sm-10">
+                                                    <input
+                                                            v-model="${domain}.${field.nameSmallHump}"
+                                                            type="text" class="form-control"
+                                                            placeholder="${field.nameCN}" >
+                                                </div>
+                                            </div>
+                                    </#if>
 
+                                </#if>
+                            </#list>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -106,12 +127,17 @@
 <script>
     import Pagination from "../../components/pagination";
     export default {
-        name: "${domain}",
-        components: "${module}-${domain}",
+        name: "${module}-${domain}",
+        components: {Pagination},
         data: function () {
             return {
                 ${domain}:{},
-                ${domain}s: []
+                ${domain}s: [],
+                <#list fieldUtilList as field>
+                    <#if field.Enums>
+                ${field.enumsConst}:${field.enumsConst},
+                    </#if>
+                </#list>
             }
         },
         mounted: function () {
@@ -151,9 +177,25 @@
             /**
              * 点击【保存】
              */
-            save() {
+            save(page) {
                 let _this = this;
-                //校验
+
+                //保存校验，1!=1去掉自动生成的代码第一个||或
+                if(1 != 1
+                <#list fieldUtilList as field>
+                        <#if field.name!="id" && field.nameSmallHump!="createTime"
+                        && field.nameSmallHump!="updateTime" && field.nameSmallHump!="sort">
+                            <#if !field.nullAble>
+                                || !Validator.require(_this.${domain}.${field.nameSmallHump},"${field.nameCN}")
+                            </#if>
+                            <#if (field.length>0)>
+                                || !Validator.length(_this.${domain}.${field.nameSmallHump},"${field.nameCN}",3,${field.length?c})
+                            </#if>
+                        </#if >
+                </#list>
+                ){
+                    return;
+                }
 
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER+'/${module}/admin/${domain}/save', _this.${domain})
@@ -185,10 +227,8 @@
              */
             del(id){
                 let _this=this;
-                //引入confirm
                 Confirm.show("删除${tableNameCN}后不可恢复!",function () {
                     Loading.show();
-                    //restFul分割请求，对应controller定义的mapping跳转类型
                     _this.$ajax.delete(process.env.VUE_APP_SERVER+'/${module}/admin/${domain}/delete/'+id)
                         .then((responseDel)=>{
                             Loading.hide();

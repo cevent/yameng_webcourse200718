@@ -24,6 +24,7 @@ public class EnumGenerator {
         long begin=System.currentTimeMillis();
 
         try {
+            //传入需要转换的Enum，stringBuffer构造字符串
             toJson(SectionChargeEnum.class,bufferObject,bufferArray);
             toJson(YesOrNoEnum.class,bufferObject,bufferArray);
             toJson(CourseLevelEnum.class,bufferObject,bufferArray);
@@ -40,7 +41,7 @@ public class EnumGenerator {
         }
 
         long end=System.currentTimeMillis();
-        System.out.println("执行耗时："+(end-begin)+" 毫秒！");
+        System.out.println("ENUMS-generator执行耗时："+(end-begin)+" 毫秒！");
     }
 
     /**
@@ -65,6 +66,7 @@ public class EnumGenerator {
         }
     }
 
+
     private static void toJson(Class clazz,StringBuffer bufferObject,StringBuffer bufferArray) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String key=toUnderLine(clazz.getSimpleName());
         toJson(clazz,key,bufferObject,bufferArray);
@@ -72,13 +74,13 @@ public class EnumGenerator {
 
     private static void toJson(Class clazz,String key,StringBuffer bufferObject,StringBuffer bufferArray)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        //获取枚举常量数组
+        //通过反射，获取枚举变量数组
         Object[] objects=clazz.getEnumConstants();
         Method name=clazz.getMethod("name");
         Method getDESC=clazz.getMethod("getDesc");
         Method getCODE=clazz.getMethod("getCode");
 
-        //生成对象
+        //生成对象,enums.js的key和value
         bufferObject.append(key).append("={");
         for(int i=0;i<objects.length;i++){
             Object obj=objects[i];
@@ -128,7 +130,7 @@ public class EnumGenerator {
             }
         }
 
-        bufferArray.append("]:\r\n");
+        bufferArray.append("];\r\n");
 
     }
 

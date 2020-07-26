@@ -30,7 +30,7 @@
 
             <tbody>
             <!--获取数据-->
-            <tr v-for="chapter in chapters" :key="chapter">
+            <tr v-for="chapter in chapters" :key="chapter.index">
                 <td>{{chapter.id}}</td>
                 <td>{{chapter.name}}</td>
                 <td>{{chapter.courseId}}</td>

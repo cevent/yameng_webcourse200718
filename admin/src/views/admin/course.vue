@@ -16,36 +16,41 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                                        <th>小节ID</th>
-                        <th>标题</th>
-                        <th>课程ID</th>
-                        <th>章节ID</th>
-                        <th>视频地址</th>
-                        <th>时长-单位秒</th>
-                        <th>收费-C收费-F免费</th>
+                                        <th>课程ID</th>
+                        <th>课程名</th>
+                        <th>课程概述</th>
+                        <th>时长 </th>
+                        <th>价格（元）</th>
+                        <th>封面</th>
+                        <th>级别</th>
+                        <th>收费</th>
+                        <th>状态</th>
+                        <th>报名数</th>
                         <th>顺序</th>
                 <th class="hidden-480">操作</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr v-for="section in sections" :key="section.index">
-                        <td>{{section.id}}</td>
-                        <td>{{section.title}}</td>
-                        <td>{{section.courseId}}</td>
-                        <td>{{section.chapterId}}</td>
-                        <td>{{section.videoAdd}}</td>
-                        <td>{{section.time}}</td>
-                        <!-- CHARGE=list | 表示过滤器引用 option=section.value,section.value -->
-                        <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
-                        <td>{{section.sort}}</td>
+            <tr v-for="course in courses" :key="course.index">
+                        <td>{{course.id}}</td>
+                        <td>{{course.name}}</td>
+                        <td>{{course.summary}}</td>
+                        <td>{{course.time}}</td>
+                        <td>{{course.price}}</td>
+                        <td>{{course.image}}</td>
+                        <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>
+                        <td>{{COURSE_CHARGE | optionKV(course.charge)}}</td>
+                        <td>{{COURSE_STATUS | optionKV(course.status)}}</td>
+                        <td>{{course.enroll}}</td>
+                        <td>{{course.sort}}</td>
 
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-info" v-on:click="edit(section)">
+                        <button class="btn btn-xs btn-info" v-on:click="edit(course)">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
-                        <button class="btn btn-xs btn-danger" v-on:click="del(section.id)">
+                        <button class="btn btn-xs btn-danger" v-on:click="del(course.id)">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                         </button>
                     </div>
@@ -59,14 +64,14 @@
                             </button>
                             <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                 <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="edit(section)">
+                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="edit(course)">
                                         <span class="blue">
                                             <i class="ace-icon fa fa-pencil bigger-120" ></i>
                                         </span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="del(section.id)">
+                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="del(course.id)">
                                         <span class="blue">
                                             <i class="ace-icon fa fa-trash bigger-120"></i>
                                         </span>
@@ -85,68 +90,93 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">小节表单</h4>
+                        <h4 class="modal-title">课程表表单</h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">标题</label>
+                                        <label class="col-sm-2 control-label">课程名</label>
                                         <div class="col-sm-10">
                                             <input
-                                                    v-model="section.title"
+                                                    v-model="course.name"
                                                     type="text" class="form-control"
-                                                    placeholder="标题" >
+                                                    placeholder="课程名" >
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">课程ID</label>
+                                        <label class="col-sm-2 control-label">课程概述</label>
                                         <div class="col-sm-10">
                                             <input
-                                                    v-model="section.courseId"
+                                                    v-model="course.summary"
                                                     type="text" class="form-control"
-                                                    placeholder="课程ID" >
+                                                    placeholder="课程概述" >
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">章节ID</label>
+                                        <label class="col-sm-2 control-label">时长 </label>
                                         <div class="col-sm-10">
                                             <input
-                                                    v-model="section.chapterId"
+                                                    v-model="course.time"
                                                     type="text" class="form-control"
-                                                    placeholder="章节ID" >
+                                                    placeholder="时长 " >
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">视频地址</label>
+                                        <label class="col-sm-2 control-label">价格（元）</label>
                                         <div class="col-sm-10">
                                             <input
-                                                    v-model="section.videoAdd"
+                                                    v-model="course.price"
                                                     type="text" class="form-control"
-                                                    placeholder="视频地址" >
+                                                    placeholder="价格（元）" >
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">时长-单位秒</label>
+                                        <label class="col-sm-2 control-label">封面</label>
                                         <div class="col-sm-10">
                                             <input
-                                                    v-model="section.time"
+                                                    v-model="course.image"
                                                     type="text" class="form-control"
-                                                    placeholder="时长-单位秒" >
+                                                    placeholder="封面" >
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">是否收费</label>
+                                        <label class="col-sm-2 control-label">级别</label>
                                         <div class="col-sm-10">
-                                            <select v-model="section.charge" class="form-control">
-                                                <option v-for="o in SECTION_CHARGE" :key="o.index" v-bind:value="o.key">{{o.value}}</option>
+                                           <select v-model="course.level" class="form-control">
+                                               <option v-for="L in COURSE_LEVEL" :key="L.index" v-bind:value="L.key">{{L.value}}</option>
+                                           </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">收费</label>
+                                        <div class="col-sm-10">
+                                            <select v-model="course.charge" class="form-control">
+                                                <option v-for="C in COURSE_CHARGE" :key="C.index" v-bind:value="C.key">{{C.value}}</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">状态</label>
+                                        <div class="col-sm-10">
+                                            <select v-model="course.status" class="form-control">
+                                                <option v-for="S in COURSE_STATUS" :key="S.index" v-bind:value="S.key">{{S.value}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">报名数</label>
+                                        <div class="col-sm-10">
+                                            <input
+                                                    v-model="course.enroll"
+                                                    type="text" class="form-control"
+                                                    placeholder="报名数" >
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">顺序</label>
                                         <div class="col-sm-10">
                                             <input
-                                                    v-model="section.sort"
+                                                    v-model="course.sort"
                                                     type="text" class="form-control"
                                                     placeholder="顺序" >
                                         </div>
@@ -167,13 +197,15 @@
 <script>
     import Pagination from "../../components/pagination";
     export default {
-        name: "business-section",
+        name: "business-course",
         components: {Pagination},
         data: function () {
             return {
-                section:{},
-                sections: [],
-                SECTION_CHARGE:SECTION_CHARGE,
+                course:{},
+                courses: [],
+                COURSE_LEVEL:COURSE_LEVEL,
+                COURSE_CHARGE:COURSE_CHARGE,
+                COURSE_STATUS:COURSE_STATUS
             }
         },
         mounted: function () {
@@ -189,15 +221,15 @@
             list(page) {
                 let _this = this;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/section/list',
+                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/course/list',
                     {
                         currentPage: page,
                         initPageNum: _this.$refs.pagination.size
                     }).then((responseDTO) => {
                     Loading.hide();
-                    console.log("查询小节列表：", responseDTO);
+                    console.log("查询课程表列表：", responseDTO);
                     let resp=responseDTO.data;
-                    _this.sections = resp.responseData.list;
+                    _this.courses = resp.responseData.list;
                     _this.$refs.pagination.render(page,resp.responseData.sumPage);
                 })
             },
@@ -207,7 +239,7 @@
             add(){
                 let _this=this;
                 console.log("为不引起eslint提醒，调用_list:"+_this);
-                _this.section={};
+                _this.course={};
                 $("#form-modal").modal("show");
             },
             /**
@@ -218,18 +250,19 @@
 
                 //保存校验，1!=1去掉自动生成的代码第一个||或
                 if(1 != 1
-                                || !Validator.require(_this.section.title,"标题")
-                                || !Validator.length(_this.section.title,"标题",3,50)
-                                || !Validator.length(_this.section.videoAdd,"视频地址",3,200)
+                                || !Validator.require(_this.course.name,"课程名")
+                                || !Validator.length(_this.course.name,"课程名",3,50)
+                                || !Validator.length(_this.course.summary,"课程概述",3,2000)
+                                || !Validator.length(_this.course.image,"封面",3,100)
                 ){
                     return;
                 }
 
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/section/save', _this.section)
+                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/course/save', _this.course)
                     .then((responseAdd) => {
                         Loading.hide();
-                        console.log("保存小节结果：", responseAdd);
+                        console.log("保存课程表结果：", responseAdd);
                         let resp = responseAdd.data;
                         if (resp.success) {
                             $("#form-modal").modal('hide');
@@ -244,10 +277,10 @@
             /**
              * 点击【编辑】
              */
-            edit(section){
+            edit(course){
                 let _this=this;
 
-                _this.section=$.extend({},section);
+                _this.course=$.extend({},course);
                 $("#form-modal").modal("show");
             },
             /**
@@ -255,12 +288,12 @@
              */
             del(id){
                 let _this=this;
-                Confirm.show("删除小节后不可恢复!",function () {
+                Confirm.show("删除课程表后不可恢复!",function () {
                     Loading.show();
-                    _this.$ajax.delete(process.env.VUE_APP_SERVER+'/business/admin/section/delete/'+id)
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER+'/business/admin/course/delete/'+id)
                         .then((responseDel)=>{
                             Loading.hide();
-                            console.log("删除小节内容：",responseDel);
+                            console.log("删除课程表内容：",responseDel);
                             let resp=responseDel.data;
                             if(resp.success){
                                 _this.list(1);

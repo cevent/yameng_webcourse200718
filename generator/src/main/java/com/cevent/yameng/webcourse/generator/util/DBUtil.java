@@ -121,18 +121,23 @@ public class DBUtil {
                 }else{
                     fieldUtil.setNameCN(comment);
                 }
-
+                //为空校验，如果获取到的Null为yes，那么NullAble=true
+                /**
+                 * char类型：一般为固定长度的字段，常见的id（无需校验）和枚举字段（有下拉框，不是手输无需校验），
+                 */
                 fieldUtil.setNullAble("YES".equals(nullAble));
                 if(type.toUpperCase().contains("varchar".toUpperCase())){
+                    //如果length>0，需要对length校验，
                     String lengthStr=type.substring(type.indexOf("(")+1,type.length()-1);
                     fieldUtil.setLength(Integer.valueOf(lengthStr));
                 }else{
+                    //length=0则不校验
                     fieldUtil.setLength(0);
                 }
-
+                //判断注释中有枚举，则提取EnumClass名
                 if(comment.contains("枚举")){
                     fieldUtil.setEnums(true);
-                    //以课程等级为例，从注释中的“枚举[CourseLevelEnum]”,得到COURSE_LEVEL
+                    //以课程等级为例，从注释中的“枚举：[CourseLevelEnum]”,得到COURSE_LEVEL
                     int start=comment.indexOf("[");
                     int end=comment.indexOf("]");
                     String enumsName=comment.substring(start+1,end);

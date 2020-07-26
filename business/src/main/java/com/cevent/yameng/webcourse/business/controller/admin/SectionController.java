@@ -38,6 +38,10 @@ public class SectionController {
     public ResponseDto save(@RequestBody SectionDto sectionDto) {
         LOG.info("输出sectionDTO对象：{}", sectionDto);
         //保存校验
+                Validator.require(sectionDto.getId(),"小节ID");
+                Validator.require(sectionDto.getTitle(),"标题");
+                Validator.length(sectionDto.getTitle(),"标题",1,50);
+                Validator.length(sectionDto.getVideoAdd(),"视频地址",1,200);
 
         ResponseDto responseDto = new ResponseDto();
         sectionService.save(sectionDto);

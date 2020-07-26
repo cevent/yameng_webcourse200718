@@ -4,6 +4,7 @@ import com.cevent.yameng.webcourse.server.domain.Section;
 import com.cevent.yameng.webcourse.server.domain.SectionExample;
 import com.cevent.yameng.webcourse.server.dto.SectionDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
+import com.cevent.yameng.webcourse.server.enums.SectionChargeEnum;
 import com.cevent.yameng.webcourse.server.mapper.SectionMapper;
 import com.cevent.yameng.webcourse.server.util.CopyUtil;
 import com.cevent.yameng.webcourse.server.util.UUIDUtil;
@@ -14,6 +15,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import java.util.Date;
 
 @Service
 public class SectionService {
@@ -27,6 +30,7 @@ public class SectionService {
 
         PageHelper.startPage(pageDto.getCurrentPage(),pageDto.getInitPageNum());
         SectionExample sectionExample=new SectionExample();
+        sectionExample.setOrderByClause("sort asc");
         List<Section> sectionList=sectionMapper.selectByExample(sectionExample);
 
         PageInfo<Section> pageInfo=new PageInfo<>(sectionList);
@@ -40,7 +44,13 @@ public class SectionService {
      * 新增
      */
     private void insert(Section section){
+        Date now=new Date();
+        section.setCreateTime(now);
+        section.setUpdateTime(now);
         section.setId(UUIDUtil.getShortUUID());
+        //设置默认为收费
+        section.setCharge(SectionChargeEnum.CHARGE.getCode());
+
         sectionMapper.insert(section);
     }
 
@@ -49,6 +59,7 @@ public class SectionService {
      * 更新
      */
     private void update(Section section){
+        section.setUpdateTime(new Date());
         sectionMapper.updateByPrimaryKey(section);
     }
 

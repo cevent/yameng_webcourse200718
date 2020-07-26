@@ -13,14 +13,19 @@ import org.springframework.util.StringUtils;
  */
 public class Validator {
     //1.空校验
-    public static void require(String str,String fieldName){
-        if(StringUtils.isEmpty(str)){
+    public static void require(Object obj,String fieldName){
+        if(StringUtils.isEmpty(obj)){
             throw new ValidationException(fieldName+"不能为空");
         }
     }
 
     //2.长度校验
     public static void length(String str,String fieldName,int min ,int max){
+        //如果传入值为空，不校验
+        if(StringUtils.isEmpty(str)){
+            return;
+        }
+
         int length=0;
         if(!StringUtils.isEmpty(str)){
             length=str.length();

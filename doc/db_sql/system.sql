@@ -61,3 +61,28 @@ INSERT INTO `section` (id,title,course_id,chapter_id,video_add,time,charge,sort,
 VALUES('A0000101','测试小节01','00000101','00000001','',500,'F',1,NOW(),NOW());
 INSERT INTO `section` (id,title,course_id,chapter_id,video_add,time,charge,sort,create_time,update_time)
 VALUES('A0000102','测试小节02','00000102','00000002','',500,'F',1,NOW(),NOW());
+
+#5.课程表，对应枚举类名
+drop table if EXISTS course;
+create TABLE course(
+                       `id` char(8) NOT NULL default '' COMMENT '课程ID',
+                       `name` VARCHAR(50) NOT NULL COMMENT '课程名',
+                       `summary` VARCHAR(2000) COMMENT '课程概述',
+                       `time` INT default 0 COMMENT '时长 | 单位秒',
+                       `price` DECIMAL(8,2) default 0.00 COMMENT '价格（元）',
+                       `image` VARCHAR(100) COMMENT '封面',
+                       `level` CHAR(1) COMMENT '级别|枚举[CourseLevelEnum]: ONE("1","初级"),TWO("2","中级"),THREE("3","高级")',
+                       `charge` CHAR(1) COMMENT '收费|枚举[CourseChargeEnum]: CHARGE("C","收费"),FREE("F","免费")',
+                       `status` CHAR(1) COMMENT '状态|枚举[CourseStatusEnum]: PUBLISH("P","发布"),DRAFT("D","草稿")',
+                       `enroll` INTEGER default 0 COMMENT '报名数',
+                       `sort` INT COMMENT '顺序',
+                       `create_time` datetime(3) COMMENT '创建时间',
+                       `update_time` datetime(3) COMMENT '修改时间',
+                       PRIMARY KEY (`id`)
+)
+    ENGINE=INNODB default CHARSET=utf8mb4 COMMENT='课程表';
+
+INSERT INTO course (id,`name`,summary,`time`,price,image,`level`,charge,`status`,enroll,`sort`,create_time,update_time)
+VALUES ('0000001','测试课程01','springboot进阶springcloud',9990,9.9,'',1,'C','D',619,0,NOW(),NOW());
+INSERT INTO course (id,`name`,summary,`time`,price,image,`level`,charge,`status`,enroll,`sort`,create_time,update_time)
+VALUES ('0000002','测试课程02','视频网课项目进阶springcloud',9990,19.9,'',2,'C','D',700,1,NOW(),NOW());
