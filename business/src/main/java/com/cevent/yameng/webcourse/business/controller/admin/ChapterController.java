@@ -4,6 +4,7 @@ package com.cevent.yameng.webcourse.business.controller.admin;/**
 
 import com.cevent.yameng.webcourse.server.domain.Chapter;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
+import com.cevent.yameng.webcourse.server.dto.ChapterPageDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.dto.ResponseDto;
 import com.cevent.yameng.webcourse.server.exception.ValidationException;
@@ -51,12 +52,15 @@ public class ChapterController {
 
     //引入ResponseDto,requestMapping既支持post，又支持get，需要定制为特定类型post
     @PostMapping("/chapterDto")
-    public ResponseDto getChapterDto(@RequestBody PageDto pageDto) { //需求：接收流的方式，并且修改前端vue-data接收pageDto对象，因为被修改加入了page信息
+    public ResponseDto getChapterDto(@RequestBody ChapterPageDto chapterPageDto) { //需求：接收流的方式，并且修改前端vue-data接收pageDto对象，因为被修改加入了page信息
         //获取日志信息输出：("输出：id={} , name={}",id,name) 并非("输出：id="+id"+""...)
-        LOG.info("输出pageDto对象: {}", pageDto);
+        LOG.info("输出chapterPageDto对象: {}", chapterPageDto);
         ResponseDto responseDto = new ResponseDto();
-        chapterService.getChaptersDtoObj(pageDto);
-        responseDto.setResponseData(pageDto);
+        //判断传入的courseId有值
+        Validator.require(chapterPageDto.getCourseId(),"课程ID");
+
+        chapterService.getChaptersDtoObj(chapterPageDto);
+        responseDto.setResponseData(chapterPageDto);
         return responseDto;
     }
 

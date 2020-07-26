@@ -5,6 +5,7 @@ package com.cevent.yameng.webcourse.server.service;/**
 import com.cevent.yameng.webcourse.server.domain.Chapter;
 import com.cevent.yameng.webcourse.server.domain.ChapterExample;
 import com.cevent.yameng.webcourse.server.dto.ChapterDto;
+import com.cevent.yameng.webcourse.server.dto.ChapterPageDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.mapper.ChapterMapper;
 import com.cevent.yameng.webcourse.server.util.CopyUtil;
@@ -40,15 +41,22 @@ public class ChapterService {
     }
 
     //使用dto：先创建dto获取的对象
-    public void getChaptersDtoObj(PageDto pageDto){
+    public void getChaptersDtoObj(ChapterPageDto chapterPageDto){
         //引入github-pagehelper：pageNum（第几页,index=1）pageSize（每页条数）
         //pageHelper会查程序如下执行的第一条语句，即chapterMapper.selectByExample(chapterExample)
         //PageHelper.startPage(2,2);
 
         //A-->引入PageDto
-        PageHelper.startPage(pageDto.getCurrentPage(),pageDto.getInitPageNum());
+        PageHelper.startPage(chapterPageDto.getCurrentPage(),chapterPageDto.getInitPageNum());
 
         ChapterExample chapterExample=new ChapterExample();
+        //查询course，判断有值的时候，使用courseId查询
+        ChapterExample.Criteria criteria=chapterExample.createCriteria();
+        if(!StringUtils.isEmpty(chapterPageDto.getCourseId())){
+            //createCriteria只能查询一次，需要写在外层，直接用变量查询
+            criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());
+        }
+
 //        //criteria创建条件
 //        chapterExample.createCriteria().andIdEqualTo("4");
 //        //clause排序拼接子句
@@ -59,7 +67,7 @@ public class ChapterService {
 
         //B-->引用pageInfo<泛型>
         PageInfo<Chapter> pageInfo=new PageInfo<>(chaptersObj);
-        pageDto.setSumPage(pageInfo.getTotal());
+        chapterPageDto.setSumPage(pageInfo.getTotal());
 
         //循环遍历结果集:原生for循环：fori
         List<ChapterDto> chapterDtos=new ArrayList<ChapterDto>();
@@ -70,7 +78,7 @@ public class ChapterService {
             BeanUtils.copyProperties(chapter,chapterDto);
             chapterDtos.add(chapterDto);
         }
-        pageDto.setList(chapterDtos);
+        chapterPageDto.setList(chapterDtos);
     }
 
     //新增章节方法

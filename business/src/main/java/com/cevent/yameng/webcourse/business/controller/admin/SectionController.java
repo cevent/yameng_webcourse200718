@@ -3,6 +3,7 @@ package com.cevent.yameng.webcourse.business.controller.admin;
 import com.cevent.yameng.webcourse.server.dto.SectionDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
 import com.cevent.yameng.webcourse.server.dto.ResponseDto;
+import com.cevent.yameng.webcourse.server.dto.SectionPageDto;
 import com.cevent.yameng.webcourse.server.service.SectionService;
 import com.cevent.yameng.webcourse.server.util.Validator;
 import org.slf4j.Logger;
@@ -24,10 +25,12 @@ public class SectionController {
      * 列表查询
      */
     @PostMapping("/list")
-    public ResponseDto list(@RequestBody PageDto pageDto) {
+    public ResponseDto list(@RequestBody SectionPageDto sectionPageDto) {
         ResponseDto responseDto = new ResponseDto();
-        sectionService.list(pageDto);
-        responseDto.setResponseData(pageDto);
+        Validator.require(sectionPageDto.getChapterId(),"章节ID");
+        Validator.require(sectionPageDto.getCourseId(),"课程ID");
+        sectionService.list(sectionPageDto);
+        responseDto.setResponseData(sectionPageDto);
         return responseDto;
     }
 
@@ -38,7 +41,6 @@ public class SectionController {
     public ResponseDto save(@RequestBody SectionDto sectionDto) {
         LOG.info("输出sectionDTO对象：{}", sectionDto);
         //保存校验
-                Validator.require(sectionDto.getId(),"小节ID");
                 Validator.require(sectionDto.getTitle(),"标题");
                 Validator.length(sectionDto.getTitle(),"标题",1,50);
                 Validator.length(sectionDto.getVideoAdd(),"视频地址",1,200);

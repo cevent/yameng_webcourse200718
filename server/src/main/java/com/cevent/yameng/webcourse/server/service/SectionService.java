@@ -4,6 +4,7 @@ import com.cevent.yameng.webcourse.server.domain.Section;
 import com.cevent.yameng.webcourse.server.domain.SectionExample;
 import com.cevent.yameng.webcourse.server.dto.SectionDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
+import com.cevent.yameng.webcourse.server.dto.SectionPageDto;
 import com.cevent.yameng.webcourse.server.enums.SectionChargeEnum;
 import com.cevent.yameng.webcourse.server.mapper.SectionMapper;
 import com.cevent.yameng.webcourse.server.util.CopyUtil;
@@ -26,18 +27,26 @@ public class SectionService {
     /**
      * 列表查询
      */
-    public void list(PageDto pageDto){
+    public void list(SectionPageDto sectionPageDto){
 
-        PageHelper.startPage(pageDto.getCurrentPage(),pageDto.getInitPageNum());
+        PageHelper.startPage(sectionPageDto.getCurrentPage(),sectionPageDto.getInitPageNum());
         SectionExample sectionExample=new SectionExample();
+        //查询course和chapterID
+        SectionExample.Criteria criteria=sectionExample.createCriteria();
+        if(!StringUtils.isEmpty(sectionPageDto.getCourseId())){
+            criteria.andChapterIdEqualTo(sectionPageDto.getCourseId());
+        }
+        if(!StringUtils.isEmpty(sectionPageDto.getChapterId())){
+            criteria.andChapterIdEqualTo(sectionPageDto.getChapterId());
+        }
         sectionExample.setOrderByClause("sort asc");
         List<Section> sectionList=sectionMapper.selectByExample(sectionExample);
 
         PageInfo<Section> pageInfo=new PageInfo<>(sectionList);
-        pageDto.setSumPage(pageInfo.getTotal());
+        sectionPageDto.setSumPage(pageInfo.getTotal());
 
         List<SectionDto> sectionDtoList=CopyUtil.copyList(sectionList,SectionDto.class);
-        pageDto.setList(sectionDtoList);
+        sectionPageDto.setList(sectionDtoList);
     }
 
     /**

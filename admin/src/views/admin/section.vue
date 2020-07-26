@@ -1,5 +1,12 @@
 <template>
     <div>
+        <h3 >
+            <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointe blue bigger-110"></i>&nbsp;
+            <router-link to="/business/course" class="blue">{{course.name}}</router-link>
+            <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointe blue bigger-110"></i>&nbsp;
+            <router-link to="/business/chapter" class="blue">{{chapter.name}}</router-link>
+        </h3>
+        <hr>
         <p>
             <button class="btn btn-bold btn-success btn-round " v-on:click="add()">
                 <i class="ace-icon fa fa-edit bigger-110"></i>
@@ -18,8 +25,6 @@
             <tr>
                                         <th>小节ID</th>
                         <th>标题</th>
-                        <th>课程ID</th>
-                        <th>章节ID</th>
                         <th>视频地址</th>
                         <th>时长-单位秒</th>
                         <th>收费-C收费-F免费</th>
@@ -32,8 +37,6 @@
             <tr v-for="section in sections" :key="section.index">
                         <td>{{section.id}}</td>
                         <td>{{section.title}}</td>
-                        <td>{{section.courseId}}</td>
-                        <td>{{section.chapterId}}</td>
                         <td>{{section.videoAdd}}</td>
                         <td>{{section.time}}</td>
                         <!-- CHARGE=list | 表示过滤器引用 option=section.value,section.value -->
@@ -99,21 +102,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">课程ID</label>
+                                        <label class="col-sm-2 control-label">课程名称</label>
                                         <div class="col-sm-10">
-                                            <input
-                                                    v-model="section.courseId"
-                                                    type="text" class="form-control"
-                                                    placeholder="课程ID" >
+                                            <p class="form-control-static">{{course.name}}</p>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">章节ID</label>
+                                        <label class="col-sm-2 control-label">章节名称</label>
                                         <div class="col-sm-10">
-                                            <input
-                                                    v-model="section.chapterId"
-                                                    type="text" class="form-control"
-                                                    placeholder="章节ID" >
+                                            <p class="form-control-static">{{chapter.name}}</p>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -174,11 +171,21 @@
                 section:{},
                 sections: [],
                 SECTION_CHARGE:SECTION_CHARGE,
+                course:{},
+                chapter:{},
             }
         },
         mounted: function () {
             let _this = this;
             _this.$refs.pagination.size=10;
+            let course=SessionStorage.get("course") || {};
+            let chapter=SessionStorage.get("chapter") || {};
+            if(Tool.isEmpty(course) || Tool.isEmpty(chapter)){
+                _this.$router.push("/welcome");
+            }
+            _this.course=course;
+            _this.chapter=chapter;
+
             _this.list(1);
 
         },
@@ -192,7 +199,9 @@
                 _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/section/list',
                     {
                         currentPage: page,
-                        initPageNum: _this.$refs.pagination.size
+                        initPageNum: _this.$refs.pagination.size,
+                        courseId:_this.course.id,
+                        chapterId:_this.chapter.id,
                     }).then((responseDTO) => {
                     Loading.hide();
                     console.log("查询小节列表：", responseDTO);
@@ -224,6 +233,9 @@
                 ){
                     return;
                 }
+                //传入session
+                _this.session.courseId=_this.course.id;
+                _this.section.chapterId=_this.chapter.id;
 
                 Loading.show();
                 _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/section/save', _this.section)

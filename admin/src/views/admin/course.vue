@@ -13,77 +13,126 @@
 
         <pagination ref="pagination" v-bind:list="list" v-bind:itemCount="8"></pagination>
 
-        <table id="simple-table" class="table  table-bordered table-hover">
-            <thead>
-            <tr>
-                                        <th>课程ID</th>
-                        <th>课程名</th>
-                        <th>课程概述</th>
-                        <th>时长 </th>
-                        <th>价格（元）</th>
-                        <th>封面</th>
-                        <th>级别</th>
-                        <th>收费</th>
-                        <th>状态</th>
-                        <th>报名数</th>
-                        <th>顺序</th>
-                <th class="hidden-480">操作</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr v-for="course in courses" :key="course.index">
-                        <td>{{course.id}}</td>
-                        <td>{{course.name}}</td>
-                        <td>{{course.summary}}</td>
-                        <td>{{course.time}}</td>
-                        <td>{{course.price}}</td>
-                        <td>{{course.image}}</td>
-                        <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>
-                        <td>{{COURSE_CHARGE | optionKV(course.charge)}}</td>
-                        <td>{{COURSE_STATUS | optionKV(course.status)}}</td>
-                        <td>{{course.enroll}}</td>
-                        <td>{{course.sort}}</td>
-
-                <td>
-                    <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-info" v-on:click="edit(course)">
-                            <i class="ace-icon fa fa-pencil bigger-120"></i>
-                        </button>
-                        <button class="btn btn-xs btn-danger" v-on:click="del(course.id)">
-                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                        </button>
-                    </div>
-
-                    <div class="hidden-md hidden-lg">
-                        <div class="inner pos-rel">
-                            <button class="btn btn-minier btn-primary dropdown-toggle"
-                                    data-toggle="dropdown" data-position="auto">
-                                1
-                                <i class="ace-icon fa fa-cog icon-only bigger-120"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                                <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="edit(course)">
-                                        <span class="blue">
-                                            <i class="ace-icon fa fa-pencil bigger-120" ></i>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="del(course.id)">
-                                        <span class="blue">
-                                            <i class="ace-icon fa fa-trash bigger-120"></i>
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
+        <div class="row">
+            <div class="col-md-4" v-for="course in courses" :key="course.index">
+                <div class="thumbnail search-thumbnail">
+                    <!--如果图片为空则显示默认图片-->
+                    <img v-show="!course.image" class="media-object" src="/static/image/电商社交新零售.jpg" />
+                    <img v-show="course.image" class="media-object" v-bind:src="course.image" />
+                    <div class="caption">
+                        <div class="clearfix">
+                            <span class="pull-right label label-primary info-label">
+                                {{COURSE_LEVEL | optionKV(course.level)}}
+                            </span>
+                            <span class="pull-right label label-success info-label">
+                                {{COURSE_CHARGE | optionKV(course.charge)}}
+                            </span>
+                            <span class="pull-right label label-warning info-label">
+                                {{COURSE_STATUS | optionKV(course.status)}}
+                            </span>
                         </div>
+
+                        <h3 class="search-title">
+                            <a href="#" class="blue">{{course.name}}</a>
+                        </h3>
+                        <p>
+                            <span class="blue bolder bigger-150 ">{{course.price}}&nbsp;
+                                <i class="fa fa-rmb"></i>
+                            </span>
+                        </p>
+                        <p>{{course.summary}}</p>
+                        <p>
+                            <span class="badge badge-info">{{course.id}}</span>&nbsp;
+                            <span class="badge badge-info">排序：{{course.sort}}</span>&nbsp;
+                            <span class="badge badge-info">时长：{{course.time}}</span>
+                        </p>
+                        <p>
+                            <button class="btn btn-xs btn-yellow" v-on:click="toChapter(course)">
+                                <i class="ace-icon fa fa-arrows bigger-120">&nbsp;章节</i>
+                            </button>
+                            <button class="btn btn-xs btn-info" v-on:click="edit(course)">
+                                <i class="ace-icon fa fa-pencil bigger-120">&nbsp;编辑</i>
+                            </button>
+                            <button class="btn btn-xs btn-danger" v-on:click="del(course.id)">
+                                <i class="ace-icon fa fa-trash-o bigger-120">&nbsp;删除</i>
+                            </button>
+                        </p>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+            </div>
+        </div>
+
+<!--        <table id="simple-table" class="table  table-bordered table-hover">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                                        <th>课程ID</th>-->
+<!--                        <th>课程名</th>-->
+<!--                        <th>课程概述</th>-->
+<!--                        <th>时长 </th>-->
+<!--                        <th>价格（元）</th>-->
+<!--                        <th>封面</th>-->
+<!--                        <th>级别</th>-->
+<!--                        <th>收费</th>-->
+<!--                        <th>状态</th>-->
+<!--                        <th>报名数</th>-->
+<!--                        <th>顺序</th>-->
+<!--                <th class="hidden-480">操作</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+
+<!--            <tbody>-->
+<!--            <tr v-for="course in courses" :key="course.index">-->
+<!--                        <td>{{course.id}}</td>-->
+<!--                        <td>{{course.name}}</td>-->
+<!--                        <td>{{course.summary}}</td>-->
+<!--                        <td>{{course.time}}</td>-->
+<!--                        <td>{{course.price}}</td>-->
+<!--                        <td>{{course.image}}</td>-->
+<!--                        <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>-->
+<!--                        <td>{{COURSE_CHARGE | optionKV(course.charge)}}</td>-->
+<!--                        <td>{{COURSE_STATUS | optionKV(course.status)}}</td>-->
+<!--                        <td>{{course.enroll}}</td>-->
+<!--                        <td>{{course.sort}}</td>-->
+
+<!--                <td>-->
+<!--                    <div class="hidden-sm hidden-xs btn-group">-->
+<!--                        <button class="btn btn-xs btn-info" v-on:click="edit(course)">-->
+<!--                            <i class="ace-icon fa fa-pencil bigger-120"></i>-->
+<!--                        </button>-->
+<!--                        <button class="btn btn-xs btn-danger" v-on:click="del(course.id)">-->
+<!--                            <i class="ace-icon fa fa-trash-o bigger-120"></i>-->
+<!--                        </button>-->
+<!--                    </div>-->
+
+<!--                    <div class="hidden-md hidden-lg">-->
+<!--                        <div class="inner pos-rel">-->
+<!--                            <button class="btn btn-minier btn-primary dropdown-toggle"-->
+<!--                                    data-toggle="dropdown" data-position="auto">-->
+<!--                                1-->
+<!--                                <i class="ace-icon fa fa-cog icon-only bigger-120"></i>-->
+<!--                            </button>-->
+<!--                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">-->
+<!--                                <li>-->
+<!--                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="edit(course)">-->
+<!--                                        <span class="blue">-->
+<!--                                            <i class="ace-icon fa fa-pencil bigger-120" ></i>-->
+<!--                                        </span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="del(course.id)">-->
+<!--                                        <span class="blue">-->
+<!--                                            <i class="ace-icon fa fa-trash bigger-120"></i>-->
+<!--                                        </span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
 
         <div id="form-modal" class="modal fade" tabindex="-1" role="dialog" >
             <div class="modal-dialog" role="document">
@@ -302,10 +351,23 @@
                         });
                 });
             },
+            /**
+             * 点击【章节】
+             */
+            toChapter(course){
+                let _this=this;
+                SessionStorage.set("course",course);
+                _this.$router.push("/business/chapter");
+            }
         }
     }
 </script>
 
 <style scoped>
+    /*scoped：样式只应用于当前组件
+    */
+    .caption h3{
+        font-size: 24px;
+    }
 
 </style>

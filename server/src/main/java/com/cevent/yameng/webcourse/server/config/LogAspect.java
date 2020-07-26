@@ -67,7 +67,7 @@ public class LogAspect {
         if(signatureName.contains("list") || signatureName.contains("query") || signatureName.contains("get")){
             serviceOperation="查询";
         }
-        if (signatureName.contains("save") || signatureName.contains("add")){
+        if (signatureName.contains("save") || signatureName.contains("add") || signatureName.contains("insert") || signatureName.contains("edit")){
             serviceOperation="保存";
         }
         if(signatureName.contains("delete") || signatureName.contains("del")){
