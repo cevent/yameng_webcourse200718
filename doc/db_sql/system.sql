@@ -90,3 +90,33 @@ VALUES ('0000002','测试课程02','视频网课项目进阶springcloud',9990,19
 #6.查询课程进行，小节时间累加，更新course表的time字段
 update course c set `time`=(select sum(`time`) from `section` where course_id='0000001')
 where c.id='0000001';
+
+#7.分类表:支持无限级分类
+DROP TABLE IF EXISTS `category`;
+CREATE TABLE `category`(
+                           `id` char(8) NOT NULL default '' COMMENT '分类ID',
+                           `parent` CHAR(8) NOT NULL default '' COMMENT '父ID',
+                           `name` VARCHAR(50) NOT NULL COMMENT '分类名称',
+                           `sort` INT COMMENT '顺序',
+                           PRIMARY KEY (`id`)
+)
+    ENGINE=INNODB default CHARSET=utf8mb4 COMMENT='分类表';
+# 100为一级分类，200为2级分类,如果为1级分类，则parent-id为8个0
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000100','00000000','VUE响应式界面',100);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000101','00000002','html/css布局',101);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000102','00000003','javaScript-DOM',102);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000103','00000004','freemarker',103);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000204','00000205','mybatis',104);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000205','00000206','angular',105);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000206','00000207','zepto',106);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000207','00000208','react',107);
+INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
+VALUES('00000208','00000209','sqoop',108);

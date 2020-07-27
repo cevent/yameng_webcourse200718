@@ -36,6 +36,7 @@ public class SectionController {
 
     /**
      * 保存，id有值更新，id=null新增
+     * throws测试事务异常
      */
     @PostMapping("/save")
     public ResponseDto save(@RequestBody SectionDto sectionDto) {

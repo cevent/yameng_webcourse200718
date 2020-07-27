@@ -16,33 +16,27 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                <#list fieldUtilList as field>
-                    <#if field.nameSmallHump!="createTime" && field.nameSmallHump!="updateTime">
-                        <th>${field.nameCN}</th>
-                    </#if>
-                </#list>
+                                        <th>分类ID</th>
+                        <th>父ID</th>
+                        <th>分类名称</th>
+                        <th>顺序</th>
                 <th class="hidden-480">操作</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr v-for="${domain} in ${domain}s" :key="${domain}.index">
-                <#list fieldUtilList as field>
-                    <#if field.nameSmallHump!="createTime" && field.nameSmallHump!="updateTime">
-                        <#if field.enums>
-                            <td>{{${field.enumsConst} | optionKV(${domain}.${field.nameSmallHump}) }}</td>
-                        <#else>
-                            <td>{{${domain}.${field.nameSmallHump}}}</td>
-                        </#if>
-                    </#if>
-                </#list>
+            <tr v-for="category in categorys" :key="category.index">
+                            <td>{{category.id}}</td>
+                            <td>{{category.parent}}</td>
+                            <td>{{category.name}}</td>
+                            <td>{{category.sort}}</td>
 
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
-                        <button class="btn btn-xs btn-info" v-on:click="edit(${domain})">
+                        <button class="btn btn-xs btn-info" v-on:click="edit(category)">
                             <i class="ace-icon fa fa-pencil bigger-120"></i>
                         </button>
-                        <button class="btn btn-xs btn-danger" v-on:click="del(${domain}.id)">
+                        <button class="btn btn-xs btn-danger" v-on:click="del(category.id)">
                             <i class="ace-icon fa fa-trash-o bigger-120"></i>
                         </button>
                     </div>
@@ -56,14 +50,14 @@
                             </button>
                             <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                 <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="edit(${domain})">
+                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="edit(category)">
                                         <span class="blue">
                                             <i class="ace-icon fa fa-pencil bigger-120" ></i>
                                         </span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="del(${domain}.id)">
+                                    <a href="#" class="tooltip-info" data-rel="tooltip" title="view" v-on:click="del(category.id)">
                                         <span class="blue">
                                             <i class="ace-icon fa fa-trash bigger-120"></i>
                                         </span>
@@ -82,35 +76,40 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">${tableNameCN}表单</h4>
+                        <h4 class="modal-title">分类表表单</h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal">
-                            <#list fieldUtilList as field>
-                                <#if field.name!="id" && field.nameSmallHump!="createTime" && field.nameSmallHump!="updateTime">
-                                    <#if field.enums>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">${field.nameCN}</label>
-                                            <div class="col-sm-10">
-                                                <select v-model="${domain}.${field.nameSmallHump}" class="form-control">
-                                                    <option v-for="e in ${field.enumsConst}" :key="e.index" v-bind:value="e.key">{{e.value}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <#else >
                                             <div class="form-group">
-                                                <label class="col-sm-2 control-label">${field.nameCN}</label>
+                                                <label class="col-sm-2 control-label">父ID</label>
                                                 <div class="col-sm-10">
                                                     <input
-                                                            v-model="${domain}.${field.nameSmallHump}"
+                                                            v-model="category.parent"
                                                             type="text" class="form-control"
-                                                            placeholder="${field.nameCN}" >
+                                                            placeholder="父ID" >
                                                 </div>
                                             </div>
-                                    </#if>
 
-                                </#if>
-                            </#list>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">分类名称</label>
+                                                <div class="col-sm-10">
+                                                    <input
+                                                            v-model="category.name"
+                                                            type="text" class="form-control"
+                                                            placeholder="分类名称" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">顺序</label>
+                                                <div class="col-sm-10">
+                                                    <input
+                                                            v-model="category.sort"
+                                                            type="text" class="form-control"
+                                                            placeholder="顺序" >
+                                                </div>
+                                            </div>
+
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -127,17 +126,12 @@
 <script>
     import Pagination from "../../components/pagination";
     export default {
-        name: "${module}-${domain}",
+        name: "business-category",
         components: {Pagination},
         data: function () {
             return {
-                ${domain}:{},
-                ${domain}s: [],
-                <#list fieldUtilList as field>
-                    <#if field.enums>
-                ${field.enumsConst}:${field.enumsConst},
-                    </#if>
-                </#list>
+                category:{},
+                categorys: [],
             }
         },
         mounted: function () {
@@ -153,15 +147,15 @@
             list(page) {
                 let _this = this;
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/${module}/admin/${domain}/list',
+                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/category/list',
                     {
                         currentPage: page,
                         initPageNum: _this.$refs.pagination.size
                     }).then((responseDTO) => {
                     Loading.hide();
-                    console.log("查询${tableNameCN}列表：", responseDTO);
+                    console.log("查询分类表列表：", responseDTO);
                     let resp=responseDTO.data;
-                    _this.${domain}s = resp.responseData.list;
+                    _this.categorys = resp.responseData.list;
                     _this.$refs.pagination.render(page,resp.responseData.sumPage);
                 })
             },
@@ -171,7 +165,7 @@
             add(){
                 let _this=this;
                 console.log("为不引起eslint提醒，调用_list:"+_this);
-                _this.${domain}={};
+                _this.category={};
                 $("#form-modal").modal("show");
             },
             /**
@@ -182,26 +176,18 @@
 
                 //保存校验，1!=1去掉自动生成的代码第一个||或
                 if(1 != 1
-                <#list fieldUtilList as field>
-                        <#if field.name!="id" && field.nameSmallHump!="createTime"
-                        && field.nameSmallHump!="updateTime" && field.nameSmallHump!="sort">
-                            <#if !field.nullAble>
-                                || !Validator.require(_this.${domain}.${field.nameSmallHump},"${field.nameCN}")
-                            </#if>
-                            <#if (field.length>0)>
-                                || !Validator.length(_this.${domain}.${field.nameSmallHump},"${field.nameCN}",3,${field.length?c})
-                            </#if>
-                        </#if >
-                </#list>
+                                || !Validator.require(_this.category.parent,"父ID")
+                                || !Validator.require(_this.category.name,"分类名称")
+                                || !Validator.length(_this.category.name,"分类名称",3,50)
                 ){
                     return;
                 }
 
                 Loading.show();
-                _this.$ajax.post(process.env.VUE_APP_SERVER+'/${module}/admin/${domain}/save', _this.${domain})
+                _this.$ajax.post(process.env.VUE_APP_SERVER+'/business/admin/category/save', _this.category)
                     .then((responseAdd) => {
                         Loading.hide();
-                        console.log("保存${tableNameCN}结果：", responseAdd);
+                        console.log("保存分类表结果：", responseAdd);
                         let resp = responseAdd.data;
                         if (resp.success) {
                             $("#form-modal").modal('hide');
@@ -216,10 +202,10 @@
             /**
              * 点击【编辑】
              */
-            edit(${domain}){
+            edit(category){
                 let _this=this;
 
-                _this.${domain}=$.extend({},${domain});
+                _this.category=$.extend({},category);
                 $("#form-modal").modal("show");
             },
             /**
@@ -227,12 +213,12 @@
              */
             del(id){
                 let _this=this;
-                Confirm.show("删除${tableNameCN}后不可恢复!",function () {
+                Confirm.show("删除分类表后不可恢复!",function () {
                     Loading.show();
-                    _this.$ajax.delete(process.env.VUE_APP_SERVER+'/${module}/admin/${domain}/delete/'+id)
+                    _this.$ajax.delete(process.env.VUE_APP_SERVER+'/business/admin/category/delete/'+id)
                         .then((responseDel)=>{
                             Loading.hide();
-                            console.log("删除${tableNameCN}内容：",responseDel);
+                            console.log("删除分类表内容：",responseDel);
                             let resp=responseDel.data;
                             if(resp.success){
                                 _this.list(1);

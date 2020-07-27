@@ -38,7 +38,7 @@
                         <td>{{section.id}}</td>
                         <td>{{section.title}}</td>
                         <td>{{section.videoAdd}}</td>
-                        <td>{{section.time}}</td>
+                        <td>{{section.time | formatSecond}}</td>
                         <!-- CHARGE=list | 表示过滤器引用 option=section.value,section.value -->
                         <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
                         <td>{{section.sort}}</td>
@@ -226,7 +226,7 @@
              */
             save(page) {
                 let _this = this;
-
+                _this.section.video="";
                 //保存校验，1!=1去掉自动生成的代码第一个||或
                 if(1 != 1
                                 || !Validator.require(_this.section.title,"标题")

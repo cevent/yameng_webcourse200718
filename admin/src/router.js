@@ -6,6 +6,7 @@ import Welcome from './views/admin/welcome'
 import Chapter from "./views/admin/chapter";
 import Section from "./views/admin/section";
 import Course from "./views/admin/course";
+import Category from "./views/admin/category";
 
 Vue.use(Router);
 //修改是，严谨格式化，对已有的代码，不要格式化
@@ -33,6 +34,11 @@ export default new Router({
             path: "welcome",
             name: "welcome",
             component: Welcome
+        },{
+            //配置章节路由chapter
+            path: "business/category",
+            name: "business/category",
+            component: Category
         },{
             //配置章节路由chapter
             path: "business/chapter",

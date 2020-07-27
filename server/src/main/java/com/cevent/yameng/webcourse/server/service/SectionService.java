@@ -11,7 +11,9 @@ import com.cevent.yameng.webcourse.server.util.CopyUtil;
 import com.cevent.yameng.webcourse.server.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.omg.SendingContext.RunTime;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -78,14 +80,23 @@ public class SectionService {
 
     /**
      * 保存：id有值更新，id=null新增
+     * @Transactional(rollbackFor = Exception.class)
      */
-    public void save(SectionDto sectionDto){
+    @Transactional
+    public void save(SectionDto sectionDto) {
         Section section= CopyUtil.copy(sectionDto,Section.class);
         if(StringUtils.isEmpty(sectionDto.getId())){
             this.insert(section);
         }else{
             this.update(section);
         }
+//        if(true){
+//            //测试事务RuntimeException起作用
+//            //throw new RuntimeException("事务测试runtime");
+//            //如果启用Exception，那么需要方法声明@Trans(rollbackFor)
+//            //throw new Exception("事务测试exception");
+//        }
+
         //保存时，修改/新增小节，都更新课程时长
         courseService.updateCourseTime(sectionDto.getCourseId());
     }

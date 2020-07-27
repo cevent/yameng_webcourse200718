@@ -36,7 +36,52 @@ let optionKV=(object,key)=> {
         return result;
     }
 };
+/**
+ * 增加时长过滤器
+ * @param value 如：3600
+ * @return {string} 10:00:00
+ */
+let formatSecond=(value)=>{
+    value=value || 0;
+    //将时间全部转化为int秒
+    let second=parseInt(value,10);//秒
+    let minutes=0;//分
+    let hours=0;//小时
+    if(second>60){
+        //大于60时，转换
+        minutes=Math.floor(second/60);
+        second=Math.floor(second%60);
+        if(minutes>60){
+            hours=Math.floor(minutes/60);
+            minutes=Math.floor(minutes%60);
+        }
+    }else{
+        //小于60，不处理转换
+    }
+    //将获取结果拼接
+    let result=""+PrefixInteger(second,2)+"";
+    //如果秒，则分和时不显示---30
+    // if(minutes>0){
+    //     result=""+PrefixInteger(minutes,2)+":"+result;
+    //     if(hours>0){
+    //         result=""+PrefixInteger(hours,2)+":"+result;
+    //     }
+    // }
+    //配置统一格式00:00:30
+    result=""+PrefixInteger(minutes,2)+":"+result;
+    result=""+PrefixInteger(hours,2)+":"+result;
+    return result;
+
+};
+
+/**
+ * 格式化指定长度，格式化2位，前面补0
+ */
+function PrefixInteger(num,length) {
+    return (Array(length).join('0')+num).slice(-length);
+}
 
 export default {
-    optionKV
+    optionKV,
+    formatSecond
 }

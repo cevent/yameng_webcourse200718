@@ -52,6 +52,9 @@
         <!-- <table tableName="chapter" domainObjectName="Chapter" />-->
         <!--生成小节表-->
         <!--<table tableName="section" domainObjectName="Section" />-->
-        <table tableName="course" domainObjectName="Course" />
+        <!--生成课程表-->
+        <!--<table tableName="course" domainObjectName="Course" />-->
+        <!--生成分类表-->
+        <table tableName="category" domainObjectName="Category" />
     </context>
 </generatorConfiguration>
