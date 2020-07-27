@@ -40,8 +40,8 @@
             <tbody>
             <!--获取数据-->
             <tr v-for="chapter in chapters" :key="chapter.index">
+                <td>{{chapter.id}}</td>
                 <td>{{chapter.name}}</td>
-                <td>{{chapter.courseId}}</td>
                 <td>
                     <div class="hidden-sm hidden-xs btn-group">
 
@@ -115,7 +115,7 @@
                             </div>
                             <div class="form-group">
                                 <!--for="关联id"-->
-                                <label class="col-sm-2 control-label">课程ID</label>
+                                <label class="col-sm-2 control-label">课程名称</label>
                                 <div class="col-sm-10">
                                     <p class="form-control-static" >{{course.name}}</p>
                                 </div>
@@ -164,6 +164,8 @@
             _this.course = course;
 
             _this.list(1);//初始化执行第一页
+            //slider样式激活
+            this.$parent.activeSidebar("business-course-sidebar");
 
         },
         methods: {

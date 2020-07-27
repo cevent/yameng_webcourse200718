@@ -24,6 +24,10 @@ public class SectionService {
     @Resource
     private SectionMapper sectionMapper;
 
+    //注入courseService
+    @Resource
+    private CourseService courseService;
+
     /**
      * 列表查询
      */
@@ -82,6 +86,8 @@ public class SectionService {
         }else{
             this.update(section);
         }
+        //保存时，修改/新增小节，都更新课程时长
+        courseService.updateCourseTime(sectionDto.getCourseId());
     }
 
     /**

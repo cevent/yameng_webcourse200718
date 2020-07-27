@@ -91,7 +91,7 @@ public class ChapterController {
     }
 
     //删除章节
-    @DeleteMapping("delChapter/{id}")
+    @DeleteMapping("/delChapter/{id}")
     public ResponseDto deleteChapter(@PathVariable String id) {
         LOG.info("删除的--> id:{}", id);
         ResponseDto responseDto = new ResponseDto();

@@ -23,8 +23,8 @@
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
-                                        <th>小节ID</th>
-                        <th>标题</th>
+                        <th>小节ID</th>
+                        <th>小节标题</th>
                         <th>视频地址</th>
                         <th>时长-单位秒</th>
                         <th>收费-C收费-F免费</th>
@@ -187,6 +187,8 @@
             _this.chapter=chapter;
 
             _this.list(1);
+            //slider样式激活
+            this.$parent.activeSidebar("business-course-sidebar");
 
         },
         methods: {
@@ -233,8 +235,8 @@
                 ){
                     return;
                 }
-                //传入session
-                _this.session.courseId=_this.course.id;
+                //传入section
+                _this.section.courseId=_this.course.id;
                 _this.section.chapterId=_this.chapter.id;
 
                 Loading.show();

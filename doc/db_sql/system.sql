@@ -86,3 +86,7 @@ INSERT INTO course (id,`name`,summary,`time`,price,image,`level`,charge,`status`
 VALUES ('0000001','测试课程01','springboot进阶springcloud',9990,9.9,'',1,'C','D',619,0,NOW(),NOW());
 INSERT INTO course (id,`name`,summary,`time`,price,image,`level`,charge,`status`,enroll,`sort`,create_time,update_time)
 VALUES ('0000002','测试课程02','视频网课项目进阶springcloud',9990,19.9,'',2,'C','D',700,1,NOW(),NOW());
+
+#6.查询课程进行，小节时间累加，更新course表的time字段
+update course c set `time`=(select sum(`time`) from `section` where course_id='0000001')
+where c.id='0000001';

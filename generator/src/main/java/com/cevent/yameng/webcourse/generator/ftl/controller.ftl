@@ -59,7 +59,7 @@ public class ${Domain}Controller {
     /**
      * 删除
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseDto delete(@PathVariable String id) {
         LOG.info("删除的--> id:{}", id);
         ResponseDto responseDto = new ResponseDto();
