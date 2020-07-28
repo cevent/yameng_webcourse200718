@@ -49,10 +49,13 @@
                         <p>
                             <button class="btn btn-xs btn-yellow" v-on:click="toChapter(course)">
                                 <i class="ace-icon fa fa-arrows bigger-120">&nbsp;章节</i>
-                            </button>
+                            </button>&nbsp;
+                            <button class="btn btn-xs btn-success" v-on:click="editContent(course)">
+                                <i class="ace-icon fa fa-pencil bigger-120">&nbsp;内容</i>
+                            </button>&nbsp;
                             <button class="btn btn-xs btn-info" v-on:click="edit(course)">
                                 <i class="ace-icon fa fa-pencil bigger-120">&nbsp;编辑</i>
-                            </button>
+                            </button>&nbsp;
                             <button class="btn btn-xs btn-danger" v-on:click="del(course.id)">
                                 <i class="ace-icon fa fa-trash-o bigger-120">&nbsp;删除</i>
                             </button>
@@ -179,6 +182,31 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary" v-on:click="save()">保存</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div id="course-content-modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">课程内容编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <!--富文本框位置-->
+                                    <div id="courseContent"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveCourseContent()">保存</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -379,6 +407,58 @@
                         _this.tree.checkNode(node,true);
                     }
                 })
+            },
+            /**
+             * 编辑内容按钮：打开编辑框
+             */
+            editContent(course){
+                let _this=this;
+                let id=course.id;
+                _this.course=course;
+                $("#courseContent").summernote({
+                    focus:true,
+                    height:300
+                });
+                //先清空历史内容
+                $("#courseContent").summernote('code','');
+                Loading.show();
+                _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-course-content/'+id)
+                .then((responseDto)=>{
+                    Loading.hide();
+                    let response=responseDto.data;
+                    if(response.success){
+                        //保存成功不关闭内容框
+                        $("#course-content-modal").modal({backdrop:'static',keyboard:false});
+                        if(response.responseData){
+                            //写入内容库
+                            $("#courseContent").summernote('code',response.responseData.content);
+                        }
+                    }else{
+                        Toast.warning(response.responseMsg);
+                    }
+                });
+            },
+            /**
+             * 插入课程内容
+             */
+            saveCourseContent(){
+                let _this=this;
+                //读取文本框代码
+                let content=$("#courseContent").summernote("code");
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save-course-content',
+                    {
+                        id:_this.course.id,
+                        content:content
+                    })
+                .then((responseSave)=>{
+                    Loading.hide();
+                    let response=responseSave.data;
+                    if(response.success){
+                        Toast.success("课程内容保存成功！");
+                    }else{
+                        Toast.warning(response.responseMsg);
+                    }
+                });
             }
         }
     }

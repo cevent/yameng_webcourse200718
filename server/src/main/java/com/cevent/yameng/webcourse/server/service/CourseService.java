@@ -1,9 +1,12 @@
 package com.cevent.yameng.webcourse.server.service;
 
 import com.cevent.yameng.webcourse.server.domain.Course;
+import com.cevent.yameng.webcourse.server.domain.CourseContent;
 import com.cevent.yameng.webcourse.server.domain.CourseExample;
+import com.cevent.yameng.webcourse.server.dto.CourseContentDto;
 import com.cevent.yameng.webcourse.server.dto.CourseDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
+import com.cevent.yameng.webcourse.server.mapper.CourseContentMapper;
 import com.cevent.yameng.webcourse.server.mapper.CourseMapper;
 import com.cevent.yameng.webcourse.server.mapper.ceventmapper.CeventCourseMapper;
 import com.cevent.yameng.webcourse.server.util.CopyUtil;
@@ -34,6 +37,9 @@ public class CourseService {
     //注入courseCategoryService
     @Resource
     private CourseCategoryService courseCategoryService;
+    //注入courseContentMapper
+    @Resource
+    private CourseContentMapper courseContentMapper;
 
     /**
      * 列表查询
@@ -105,4 +111,27 @@ public class CourseService {
         ceventCourseMapper.updateCourseTime(courseId);
     }
 
+    /**
+     * 查询【课程】
+     */
+    public CourseContentDto findCourseContentDto(String id){
+        CourseContent courseContent=courseContentMapper.selectByPrimaryKey(id);
+        if(courseContent==null){
+            return null;
+        }
+        return CopyUtil.copy(courseContent,CourseContentDto.class);
+    }
+    /**
+     * 保存【课程】:新增/修改
+     */
+    public int saveCourseContent(CourseContentDto courseContentDto){
+        CourseContent courseContent=CopyUtil.copy(courseContentDto,CourseContent.class);
+        //有数据-->先更新
+        int flag=courseContentMapper.updateByPrimaryKeyWithBLOBs(courseContent);
+        //无数据-->插入
+        if(flag==0){
+            flag=courseContentMapper.insert(courseContent);
+        }
+        return flag;
+    }
 }

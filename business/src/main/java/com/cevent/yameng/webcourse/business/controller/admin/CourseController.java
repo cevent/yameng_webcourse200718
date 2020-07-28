@@ -73,4 +73,26 @@ public class CourseController {
         responseDto.setResponseData(courseCategoryDtoList);
         return responseDto;
     }
+
+    /**
+     * 根据id查询content课程内容
+     */
+    @GetMapping("/find-course-content/{id}")
+    public ResponseDto findCourseContent(@PathVariable String id){
+        ResponseDto responseDto=new ResponseDto();
+        CourseContentDto courseContentDto=courseService.findCourseContentDto(id);
+        responseDto.setResponseData(courseContentDto);
+        return responseDto;
+    }
+
+    /**
+     * 保存课程内容
+     */
+    @PostMapping("/save-course-content")
+    public ResponseDto saveCourseContent(@RequestBody CourseContentDto courseContentDto){
+        ResponseDto responseDto=new ResponseDto();
+        courseService.saveCourseContent(courseContentDto);
+        return responseDto;
+    }
+
 }

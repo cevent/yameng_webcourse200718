@@ -67,10 +67,10 @@ public class LogAspect {
         if(signatureName.contains("list") || signatureName.contains("query") || signatureName.contains("get")){
             serviceOperation="查询";
         }
-        if (signatureName.contains("save") || signatureName.contains("add") || signatureName.contains("insert") || signatureName.contains("edit")){
+        else if (signatureName.contains("save") || signatureName.contains("add") || signatureName.contains("insert") || signatureName.contains("edit")){
             serviceOperation="保存";
         }
-        if(signatureName.contains("delete") || signatureName.contains("del")){
+        else if(signatureName.contains("delete") || signatureName.contains("del")){
             serviceOperation="删除";
         }else{
             serviceOperation="更新其他操作";
