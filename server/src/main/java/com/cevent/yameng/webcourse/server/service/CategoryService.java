@@ -10,6 +10,7 @@ import com.cevent.yameng.webcourse.server.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -22,22 +23,14 @@ public class CategoryService {
     private CategoryMapper categoryMapper;
 
     /**
-     * 列表查询
+     * 列表查询，二级分类不需要分页
      */
-    public void list(PageDto pageDto){
-
-        PageHelper.startPage(pageDto.getCurrentPage(),pageDto.getInitPageNum());
+    public List<CategoryDto> all(){
         CategoryExample categoryExample=new CategoryExample();
-
         categoryExample.setOrderByClause("sort asc");
-
         List<Category> categoryList=categoryMapper.selectByExample(categoryExample);
-
-        PageInfo<Category> pageInfo=new PageInfo<>(categoryList);
-        pageDto.setSumPage(pageInfo.getTotal());
-
         List<CategoryDto> categoryDtoList=CopyUtil.copyList(categoryList,CategoryDto.class);
-        pageDto.setList(categoryDtoList);
+        return categoryDtoList;
     }
 
     /**
@@ -71,8 +64,21 @@ public class CategoryService {
     /**
      * 删除
      */
+    @Transactional
     public void delete(String id){
+        deleteChildren(id);
         categoryMapper.deleteByPrimaryKey(id);
+    }
+
+    //删除子节点
+    public void deleteChildren(String id){
+        Category category=categoryMapper.selectByPrimaryKey(id);
+        if("00000000".equals(category.getParent())){
+            //如果是一级分类，并删除二级分类
+            CategoryExample categoryExample=new CategoryExample();
+            categoryExample.createCriteria().andIdEqualTo(category.getId());
+            categoryMapper.deleteByExample(categoryExample);
+        }
     }
 
 }

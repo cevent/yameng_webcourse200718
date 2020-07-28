@@ -40,7 +40,7 @@ public class SectionService {
         //查询course和chapterID
         SectionExample.Criteria criteria=sectionExample.createCriteria();
         if(!StringUtils.isEmpty(sectionPageDto.getCourseId())){
-            criteria.andChapterIdEqualTo(sectionPageDto.getCourseId());
+            criteria.andCourseIdEqualTo(sectionPageDto.getCourseId());
         }
         if(!StringUtils.isEmpty(sectionPageDto.getChapterId())){
             criteria.andChapterIdEqualTo(sectionPageDto.getChapterId());
@@ -64,7 +64,7 @@ public class SectionService {
         section.setUpdateTime(now);
         section.setId(UUIDUtil.getShortUUID());
         //设置默认为收费
-        section.setCharge(SectionChargeEnum.CHARGE.getCode());
+        //section.setCharge(SectionChargeEnum.CHARGE.getCode());
 
         sectionMapper.insert(section);
     }

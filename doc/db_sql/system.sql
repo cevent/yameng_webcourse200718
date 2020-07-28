@@ -120,3 +120,25 @@ INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
 VALUES('00000207','00000208','react',107);
 INSERT INTO `category` (`id`,`parent`,`name`,`sort`)
 VALUES('00000208','00000209','sqoop',108);
+
+#8.课程分类表
+DROP TABLE IF EXISTS `course_category`;
+CREATE table `course_category`(
+                                  `id` char(8) NOT NULL default '' COMMENT '课程分类ID',
+                                  `course_id` CHAR(8) COMMENT '课程ID|course.id',
+                                  `category_id` CHAR(8) COMMENT '分类ID|category.id',
+                                  PRIMARY KEY (`id`)
+)
+    ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COMMENT='课程分类表';
+
+#9.课程内容表：课程表和内容表是1:1关系，可设置ID相同
+#medium text:媒介文件，富文本。
+#课程详情：一般有文字、图片、视频等，需要大字段来存储medium text属于大字段存储，长度>text
+#数据库设计规则(分库分表-垂直分表)：大文本字段，单独设计一张表来存储，提高程序运行效率，方便DBA运维
+DROP TABLE IF EXISTS `course_content`;
+CREATE TABLE `course_content`(
+                                 `id` CHAR(8) NOT NULL default '' COMMENT '课程内容ID',
+                                 `content` MEDIUMTEXT NOT NULL COMMENT '课程内容',
+                                 PRIMARY KEY (`id`)
+)
+    ENGINE=INNODB default CHARSET=utf8mb4 COMMENT '课程内容表';

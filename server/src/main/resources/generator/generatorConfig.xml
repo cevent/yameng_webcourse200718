@@ -55,6 +55,8 @@
         <!--生成课程表-->
         <!--<table tableName="course" domainObjectName="Course" />-->
         <!--生成分类表-->
-        <table tableName="category" domainObjectName="Category" />
+        <!--<table tableName="category" domainObjectName="Category" />-->
+        <!--table tableName="course_category" domainObjectName="CourseCategory" />-->
+            <table tableName="course_content" domainObjectName="CourseContent" />
     </context>
 </generatorConfiguration>

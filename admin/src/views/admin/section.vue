@@ -34,7 +34,7 @@
             </thead>
 
             <tbody>
-            <tr v-for="section in sections" :key="section.index">
+            <tr v-for="section in sections" :key="section">
                         <td>{{section.id}}</td>
                         <td>{{section.title}}</td>
                         <td>{{section.videoAdd}}</td>
@@ -217,7 +217,6 @@
              */
             add(){
                 let _this=this;
-                console.log("为不引起eslint提醒，调用_list:"+_this);
                 _this.section={};
                 $("#form-modal").modal("show");
             },

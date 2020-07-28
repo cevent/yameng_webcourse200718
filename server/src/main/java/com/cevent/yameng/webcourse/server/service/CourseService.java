@@ -13,6 +13,7 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -30,6 +31,9 @@ public class CourseService {
     //调用Cevent自定义mapper接口
     @Resource
     private CeventCourseMapper ceventCourseMapper;
+    //注入courseCategoryService
+    @Resource
+    private CourseCategoryService courseCategoryService;
 
     /**
      * 列表查询
@@ -74,6 +78,7 @@ public class CourseService {
     /**
      * 保存：id有值更新，id=null新增
      */
+    @Transactional
     public void save(CourseDto courseDto){
         Course course= CopyUtil.copy(courseDto,Course.class);
         if(StringUtils.isEmpty(courseDto.getId())){
@@ -81,6 +86,8 @@ public class CourseService {
         }else{
             this.update(course);
         }
+        //批量(数组)保存分类
+        courseCategoryService.batchSave(course.getId(),courseDto.getCategoryDtos());
     }
 
     /**
