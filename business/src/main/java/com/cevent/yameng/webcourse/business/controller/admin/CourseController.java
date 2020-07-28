@@ -95,4 +95,15 @@ public class CourseController {
         return responseDto;
     }
 
+    /**
+     * 更新排序
+     */
+    @RequestMapping(value = "/update-sort")
+    public ResponseDto updateSort(@RequestBody SortDto sortDto){
+        LOG.info("更新排序");
+        ResponseDto responseDto=new ResponseDto();
+        courseService.updateSort(sortDto);
+        return responseDto;
+    }
+
 }

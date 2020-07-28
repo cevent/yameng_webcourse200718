@@ -64,13 +64,13 @@ public class LogAspect {
         //2.4打印业务操作
         String serviceOperation="";
         //contains有约定要求，方法首位必须是list or save ...
-        if(signatureName.contains("list") || signatureName.contains("query") || signatureName.contains("get")){
+        if(signatureName.contains("list") || signatureName.contains("query") || signatureName.contains("get") || signatureName.contains("find")){
             serviceOperation="查询";
         }
-        else if (signatureName.contains("save") || signatureName.contains("add") || signatureName.contains("insert") || signatureName.contains("edit")){
+        else if (signatureName.contains("save") || signatureName.contains("add") || signatureName.contains("insert") || signatureName.contains("edit") || signatureName.contains("update")){
             serviceOperation="保存";
         }
-        else if(signatureName.contains("delete") || signatureName.contains("del")){
+        else if(signatureName.contains("delete") || signatureName.contains("del") || signatureName.contains("remove")){
             serviceOperation="删除";
         }else{
             serviceOperation="更新其他操作";

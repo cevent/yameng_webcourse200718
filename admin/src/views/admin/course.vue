@@ -51,7 +51,10 @@
                                 <i class="ace-icon fa fa-arrows bigger-120">&nbsp;章节</i>
                             </button>&nbsp;
                             <button class="btn btn-xs btn-success" v-on:click="editContent(course)">
-                                <i class="ace-icon fa fa-pencil bigger-120">&nbsp;内容</i>
+                                <i class="ace-icon fa fa-edit bigger-120">&nbsp;内容</i>
+                            </button>&nbsp;
+                            <button class="btn btn-xs btn-primary" v-on:click="openSortModule(course)">
+                                <i class="ace-icon fa fa-sort bigger-120">&nbsp;排序</i>
                             </button>&nbsp;
                             <button class="btn btn-xs btn-info" v-on:click="edit(course)">
                                 <i class="ace-icon fa fa-pencil bigger-120">&nbsp;编辑</i>
@@ -169,12 +172,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <!--修改顺序为不可编辑-->
                                 <label class="col-sm-2 control-label">顺序</label>
                                 <div class="col-sm-10">
                                     <input
                                             v-model="course.sort"
                                             type="text" class="form-control"
-                                            placeholder="顺序">
+                                            disabled>
                                 </div>
                             </div>
                         </form>
@@ -198,6 +202,12 @@
                         <form class="form-horizontal">
                             <div class="form-group">
                                 <div class="col-lg-12">
+                                    <!--显示最后保存的时间-->
+                                    {{saveContentIntervalLabel}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-12">
                                     <!--富文本框位置-->
                                     <div id="courseContent"></div>
                                 </div>
@@ -210,8 +220,42 @@
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
+        </div><!-- /.content.modal -->
+        <div id="course-sort-modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">课程内容编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="control-label col-lg-3">
+                                    当前排序
+                                </div>
+                                <div class="col-lg-9">
+                                    <input class="form-control" v-model="sort.oldSort" name="oldSort" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-lg-3">
+                                    新排序
+                                </div>
+                                <div class="col-lg-9">
+                                    <input class="form-control" v-model="sort.newSort" name="newSort">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveSort()">保存</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.sort.modal -->
     </div>
 </template>
 
@@ -230,6 +274,12 @@
                 COURSE_STATUS: COURSE_STATUS,
                 categoryDtos:[],
                 tree:{},
+                saveContentIntervalLabel:"",
+                sort:{
+                    id:"", //传入course-id
+                    oldSort:0,
+                    newSort:0
+                }
             }
         },
         mounted: function () {
@@ -266,7 +316,10 @@
                 //点击新增取消选中
                 _this.tree.checkAllNodes(false);
                 console.log("为不引起eslint提醒，调用_list:" + _this);
-                _this.course = {};
+                //新增sort设置；当前分页的总条数+1
+                _this.course = {
+                    sort:_this.$refs.pagination.total+1
+                };
                 $("#form-modal").modal("show");
             },
             /**
@@ -341,8 +394,18 @@
              * 点击【章节】
              */
             toChapter(course) {
+                /**
+                 * key值不要写字符串，后面缓存用的越来越多，key名有可能冲突。如果key名要变，所有get、set都需要改
+                 * 使用工具类session-storage.js
+                 * @type {default.methods}
+                 * @private SESSION_KEY_COURSE放入sesstion缓存
+                 * ①chapter取变量（mounted）的时候，也使用该变量名
+                 * ②chapter跳到to section的时候使用该变量名SESSION_KEY_CHAPTER
+                 * ③section取变量（mounted）的时候，也使用该变量名SESSION_KEY_CHAPTER
+                 */
                 let _this = this;
-                SessionStorage.set("course", course);
+                //SessionStorage.set("course", course);
+                SessionStorage.set(SESSION_KEY_COURSE, course);
                 _this.$router.push("/business/chapter");
             },
             /**
@@ -421,6 +484,9 @@
                 });
                 //先清空历史内容
                 $("#courseContent").summernote('code','');
+                //再清空interval自动保存的时间
+                _this.saveContentIntervalLabel="";
+
                 Loading.show();
                 _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/admin/course/find-course-content/'+id)
                 .then((responseDto)=>{
@@ -433,6 +499,16 @@
                             //写入内容库
                             $("#courseContent").summernote('code',response.responseData.content);
                         }
+
+                        //开启定时自动保存5s
+                        let saveContentInterval=setInterval(function () {
+                            _this.saveCourseContent();
+                        },5000);
+                        //关闭内容框，清空自动保存内容
+                        $('#course-content-modal').on('hidden.bs.modal',function (removeAuto) {
+                            clearInterval(saveContentInterval);
+                        });
+
                     }else{
                         Toast.warning(response.responseMsg);
                     }
@@ -454,11 +530,48 @@
                     Loading.hide();
                     let response=responseSave.data;
                     if(response.success){
-                        Toast.success("课程内容保存成功！");
+                        let now=Tool.dateFormat("yyyy-MM-dd hh:mm:ss");
+                        _this.saveContentIntervalLabel="[ 最后保存时间：] "+now;
+                        //Toast.success("课程内容保存成功！");
                     }else{
                         Toast.warning(response.responseMsg);
                     }
                 });
+            },
+            /**
+             * 打开排序module
+             */
+            openSortModule(course){
+                let _this=this;
+                //初始化sort
+                _this.sort={
+                    id:course.id,
+                    oldSort:course.sort,
+                    newSort:course.sort
+                };
+                $("#course-sort-modal").modal("show");
+            },
+            /**
+             * 更新排序
+             */
+            saveSort(){
+                let _this=this;
+                if(_this.sort.newSort===_this.sort.oldSort){
+                    Toast.warning("排序没有变化");
+                    return;
+                }
+                Loading.show();
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/update-sort',_this.sort)
+                .then((responseSort)=>{
+                    let response=responseSort.data;
+                    if(response.success){
+                        Toast.success("更新排序成功");
+                        $("#course-sort-modal").modal("hide");
+                        _this.list(1);
+                    }else{
+                        Toast.error("更新排序失败");
+                    }
+                })
             }
         }
     }

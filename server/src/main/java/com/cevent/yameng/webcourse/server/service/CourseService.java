@@ -6,6 +6,7 @@ import com.cevent.yameng.webcourse.server.domain.CourseExample;
 import com.cevent.yameng.webcourse.server.dto.CourseContentDto;
 import com.cevent.yameng.webcourse.server.dto.CourseDto;
 import com.cevent.yameng.webcourse.server.dto.PageDto;
+import com.cevent.yameng.webcourse.server.dto.SortDto;
 import com.cevent.yameng.webcourse.server.mapper.CourseContentMapper;
 import com.cevent.yameng.webcourse.server.mapper.CourseMapper;
 import com.cevent.yameng.webcourse.server.mapper.ceventmapper.CeventCourseMapper;
@@ -86,6 +87,7 @@ public class CourseService {
      */
     @Transactional
     public void save(CourseDto courseDto){
+        //这里调用的是Course，关联保存分类的course.getId
         Course course= CopyUtil.copy(courseDto,Course.class);
         if(StringUtils.isEmpty(courseDto.getId())){
             this.insert(course);
@@ -133,5 +135,21 @@ public class CourseService {
             flag=courseContentMapper.insert(courseContent);
         }
         return flag;
+    }
+    /**
+     * 更新sort排序
+     */
+    @Transactional
+    public void updateSort(SortDto sortDto){
+        //1.修改当前记录的排序值
+        ceventCourseMapper.updateSort(sortDto);
+        //2.sort变大：排序区间的其他排序-1
+        if(sortDto.getNewSort()>sortDto.getOldSort()){
+            ceventCourseMapper.moveSortForward(sortDto);
+        }
+        //3.sort变小：排序区间的其他排序+1
+        if(sortDto.getNewSort()<sortDto.getOldSort()){
+            ceventCourseMapper.moveSortBackward(sortDto);
+        }
     }
 }

@@ -156,7 +156,11 @@
             //分页后，设置每页行数
             _this.$refs.pagination.size = 10;
             //取出session中的course跳转参数，加入 || {}空对象，防止course.**报错
-            let course = SessionStorage.get("course") || {};
+            //let course = SessionStorage.get("course") || {};
+
+            //从大章的session中取出js变量
+            let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
+
             //判断是否为空对象，为空跳转welcome
             if (Tool.isEmpty(course)) {
                 _this.$router.push("/welcome");
@@ -268,7 +272,8 @@
              */
             toSection(chapter){
                 let _this=this;
-                SessionStorage.set("chapter",chapter);
+                //获取session常量
+                SessionStorage.set(SESSION_KEY_CHAPTER,chapter);
                 _this.$router.push("/business/section")
             }
         }
