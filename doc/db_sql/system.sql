@@ -142,3 +142,20 @@ CREATE TABLE `course_content`(
                                  PRIMARY KEY (`id`)
 )
     ENGINE=INNODB default CHARSET=utf8mb4 COMMENT '课程内容表';
+
+#10.讲师表
+DROP TABLE IF EXISTS `teacher`;
+CREATE TABLE `teacher`(
+                          `id` CHAR(8) NOT NULL DEFAULT '' COMMENT '讲师ID',
+                          `name` VARCHAR(50) 	NOT NULL COMMENT '讲师姓名',
+                          `nickname` VARCHAR(50) COMMENT '昵称',
+                          `image` VARCHAR(100) COMMENT '头像',
+                          `position` VARCHAR(50) COMMENT '职位',
+                          `motto` VARCHAR(100) COMMENT '座右铭',
+                          `introduce` VARCHAR(500) COMMENT '介绍',
+                          PRIMARY KEY (`id`)
+)
+    ENGINE=INNODB DEFAULT charset=utf8mb4 COMMENT='讲师表';
+
+#新增讲师id列：旧表添加新字段，使用单独的sql：alter table，上生产的时候也是执行这个sql
+ALTER TABLE `course` add COLUMN(`teacher_id` CHAR(8) COMMENT '讲师ID|teacher.id');

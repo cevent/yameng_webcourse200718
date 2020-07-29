@@ -7,6 +7,7 @@ import Chapter from "./views/admin/chapter";
 import Section from "./views/admin/section";
 import Course from "./views/admin/course";
 import Category from "./views/admin/category";
+import Teacher from "./views/admin/teacher";
 
 Vue.use(Router);
 //修改是，严谨格式化，对已有的代码，不要格式化
@@ -54,6 +55,11 @@ export default new Router({
             path: "business/course",
             name: "business/course",
             component: Course
+        },{
+            //配置讲师路由teacher
+            path: "business/teacher",
+            name: "business/teacher",
+            component: Teacher
         }]
     }]
 })

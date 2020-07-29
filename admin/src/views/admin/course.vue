@@ -35,6 +35,22 @@
                         <h3 class="search-title">
                             <a href="#" class="blue">{{course.name}}</a>
                         </h3>
+                        <!--增加讲师头像-->
+                        <div class="profile-activity clearfix"
+                             v-for="teacher in teachers.filter(t=>{
+                                    return t.id===course.teacherId
+                                })" :key="teacher">
+                            <div>
+                                <img v-show="!teacher.image" class="pull-left" src="/ace/assets/images/avatars/avatar5.png" />
+                                <img v-show="teacher.image" class="pull-left" v-bind:src="teacher.image" />
+                                <a class="user" href="#">{{teacher.name}}</a>
+                                <div class="text-primary">
+                                    <i class="ace-icon fa fa-xing-square bigger-110"></i>
+                                    {{teacher.position}}
+                                </div>
+                            </div>
+                        </div>
+
                         <p>
                             <span class="blue bolder bigger-150 ">{{course.price}}&nbsp;
                                 <i class="fa fa-rmb"></i>
@@ -94,6 +110,16 @@
                                             v-model="course.name"
                                             type="text" class="form-control"
                                             placeholder="课程名">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">讲师</label>
+                                <div class="col-sm-10">
+                                    <select v-model="course.teacherId" class="form-control">
+                                        <option v-for="T in teachers" :key="T.index" v-bind:value="T.id">
+                                            {{T.name}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -279,13 +305,15 @@
                     id:"", //传入course-id
                     oldSort:0,
                     newSort:0
-                }
+                },
+                teachers:[], //加载讲师id
             }
         },
         mounted: function () {
             let _this = this;
             _this.$refs.pagination.size = 10;
             _this.allCategory();
+            _this.allTeacher();//加载讲师
             _this.list(1);
 
         },
@@ -572,7 +600,23 @@
                         Toast.error("更新排序失败");
                     }
                 })
-            }
+            },
+            /**
+             * 加载讲师表数据
+             */
+            allTeacher() {
+                let _this = this;
+                Loading.show();
+                //controller方法
+                _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all')
+                    .then((responseDTO) => {
+                        Loading.hide();
+                        console.log("查询分类表列表：", responseDTO);
+                        let resp = responseDTO.data;
+                        _this.teachers = resp.responseData;
+
+                    })
+            },
         }
     }
 </script>
@@ -581,7 +625,15 @@
     /*scoped：样式只应用于当前组件
     */
     .caption h3 {
-        font-size: 24px;
+        font-size: 28px;
+    }
+    /**
+    字体大小自适应:小屏幕，最大宽度：1199px
+     */
+    @media (max-width: 1199px){
+        .caption h3{
+            font-size: 20px;
+        }
     }
 
 </style>

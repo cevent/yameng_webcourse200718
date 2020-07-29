@@ -72,6 +72,20 @@ public class CourseDto {
      */
     private List<CategoryDto> categoryDtos;
 
+    /**
+     * 增加更改表的teacher
+     * @return
+     */
+    private String teacherId;
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
     public List<CategoryDto> getCategoryDtos() {
         return categoryDtos;
     }
@@ -204,6 +218,7 @@ public class CourseDto {
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", categoryDtos=").append(categoryDtos);
+        sb.append(", teacherId='").append(teacherId).append('\'');
         sb.append('}');
         return sb.toString();
     }
